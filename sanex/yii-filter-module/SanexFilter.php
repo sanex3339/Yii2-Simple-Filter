@@ -8,6 +8,10 @@ use yii\web\Session;
 class SanexFilter extends \yii\base\Module
 {
     public $controllerNamespace = 'sanex\filter\controllers';
+    public $filter, 
+           $modelClass, 
+           $viewFile; 
+    public $setDataProvider = false;
     public $session;
 
     public function init()
@@ -19,7 +23,9 @@ class SanexFilter extends \yii\base\Module
 
     public function setFilter($filter)
     {
-        $this->params['filter'] = $filter;
+        foreach($filter as $key => $value){
+            $this->{$key} = $value;
+        }
         $this->session['SanexFilter'] = $filter;
     	return $this->runAction('filter/set-filter');
     }

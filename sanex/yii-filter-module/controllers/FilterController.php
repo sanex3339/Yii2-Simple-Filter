@@ -25,8 +25,7 @@ class FilterController extends Controller
 
     public function actionSetFilter()
     {
-        $module = $this->module;
-        $filter = $module->params['filter']['filter'];
+        $filter = $this->module->filter;
 
         if (!$filter)
             throw new NotFoundHttpException("Invalid or empty filter properties", 1);
@@ -40,8 +39,7 @@ class FilterController extends Controller
 
     public function actionShowDataGet()
     {
-        $module = $this->module;
-        $modelClass = $module->params['filter']['model'];
+        $modelClass = $this->module->modelClass;
         $model = new $modelClass;
         $attributes = $model->attributes();
 
@@ -70,30 +68,36 @@ class FilterController extends Controller
             }
         } 
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $model->find()->where($where),
-            'sort' => false
-        ]);
+        if ($this->module->setDataProvider)
+        {
+            $data = new ActiveDataProvider([
+                'query' => $model->find()->where($where),
+                'sort' => false
+            ]);
+        } else {
+            $data = $model->find()->where($where)->all();
+        }
 
-        return $dataProvider;
+        return $data;
     }
 
     public function actionShowDataPost()
     {
-        $filter = Yii::$app->getModule('filter')->session['SanexFilter'];
-        $modelClass = $filter['model'];
-        $view = $filter['view'];
+        if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) 
+        {
+            $parameters = $this->module->session['SanexFilter'];
+            $modelClass = $parameters['modelClass'];
+            $view = $parameters['viewFile'];
 
-        $model = new $modelClass;
-        $attributes = $model->attributes();
+            $model = new $modelClass;
+            $attributes = $model->attributes();
 
-        $where = array();
-        $getParams = array();
+            $where = array();
+            $getParams = array();
 
-        //POST AJAX request - create $where array, create $getParams array
-        //$where array contain all get parameters with names same as model attributes names
-        //$getParams array contain all other get parameters
-        if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) {
+            //POST AJAX request - create $where array, create $getParams array
+            //$where array contain all get parameters with names same as model attributes names
+            //$getParams array contain all other get parameters
             $filter = json_decode($_POST['filter'], true);
             foreach ($filter as $name => $properties) 
             {            
@@ -104,16 +108,22 @@ class FilterController extends Controller
                     $getParams[$name] = explode(',', $properties['properties']);
                 }       
             }
+
+            if ($parameters['setDataProvider'])
+            {
+                $data = new ActiveDataProvider([
+                    'query' => $model->find()->where($where),
+                    'sort' => false
+                ]);
+            } else {
+                $data = $model->find()->where($where)->all();
+            }
+
+            return $this->renderPartial($view, [
+                'data' => $data
+            ]);
+        } else {
+            throw new NotFoundHttpException("Page not found.", 1);
         }
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $model->find()->where($where),
-            'sort' => false
-        ]);
-
-        //$view = $module->params['filter']['view'];
-        return $this->renderPartial($view, [
-            'dataProvider' => $dataProvider
-        ]);
     }
 }
