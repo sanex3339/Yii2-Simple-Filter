@@ -11,7 +11,7 @@ Installation:
 Place folder in vendor folder
 
 How to use?
-In controller, which has view (main veiw), where you want show data with filter, set 3 parameters:
+In controller, which has view (main view), where you want show data with filter, set 3 parameters:
 ```
 use sanex\filter\Module;
 
