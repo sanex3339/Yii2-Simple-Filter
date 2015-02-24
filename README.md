@@ -8,7 +8,7 @@ Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
 ###Right now module may not work for you, because v0.000001preAlphaBeta (but it work for me)
 
 Installation:
-Place folder in vendor folder
+Place folder in vendor folder and connect module with Yii2 like all other modules
 
 How to use?
 In controller, which has view (main view), where you want show data with filter, set 3 parameters:
