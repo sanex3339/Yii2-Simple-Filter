@@ -5,7 +5,7 @@
     FilterAsset::register($this);
 ?>
 
-<div class="filters-wrapper">
+<div class="fltr-wrapper">
 	<?php foreach ($filter as $property):?>
 		<div class='fltr-cat clearfix' id='<?=Html::encode($property['property'])?>'>
 			<span class="fltr-cat-caption"><?=Html::encode($property['caption'])?></span>

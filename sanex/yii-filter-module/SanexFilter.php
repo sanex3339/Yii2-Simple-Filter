@@ -7,12 +7,13 @@ use yii\web\Session;
 
 class SanexFilter extends \yii\base\Module
 {
-    public $controllerNamespace = 'sanex\filter\controllers';
-    public $filter, 
+    public $controllerNamespace = 'sanex\filter\controllers',
+           $filter, 
            $modelClass, 
-           $viewFile; 
-    public $setDataProvider = false;
-    public $session;
+           $session,
+           $setDataProvider = false,
+           $viewFile,
+           $viewParams;
 
     public function init()
     {
@@ -30,8 +31,13 @@ class SanexFilter extends \yii\base\Module
     	return $this->runAction('filter/set-filter');
     }
 
-    public function getData()
+    public function renderDataView($viewParams = [])
     {
+        $this->viewParams = $viewParams;
+        $tempSessionData =  $this->session['SanexFilter'];
+        $tempSessionData['viewParams'] = $viewParams;
+        $this->session['SanexFilter'] = $tempSessionData;
+
         return $this->runAction('filter/show-data-get');
     }
 }

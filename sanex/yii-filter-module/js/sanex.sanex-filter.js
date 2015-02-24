@@ -1,20 +1,19 @@
 $(document).ready(function() {
-	var filter = {}; //filter object
+	var filter = {};
 
-	//Получаем стейты чекбоксов из url
-	getCheckStateByUrlParams();
+	getCheckStateByUrlParams(); //get checkbox state from GET
 
-	$('.filters-wrapper .fltr-check').click(function() {
+	$('.fltr-wrapper .fltr-check').click(function() {
 		createUrl($(this));
 		createFilter();
 	});
 
     function getCheckStateByUrlParams() {
-    	//получаем массив из get параметров
+    	//get GET params array from url
     	var urlParams;
 		(window.onpopstate = function () {
 		    var match,
-		        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+		        pl     = /\+/g,
 		        search = /([^&=]+)=?([^&]*)/g,
 		        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
 		        query  = decodeURIComponent(window.location.search.substring(1));
@@ -29,14 +28,14 @@ $(document).ready(function() {
 		    }   
 		})();
 		
-		delete urlParams['filter']; //удаляем параметр filter
+		delete urlParams['filter']; //delete "filter" GET param
 
 		//ищем все параметры, их значения
 		//для каждого значения ищем соответствующий ему чекбокс, присваиваем ему класс 'check'
 		for (params in urlParams) {
 			var category = params.split('[', 1);
 			var properties = urlParams[params];
-			var element = $('.filters-wrapper .fltr-cat#'+category);
+			var element = $('.fltr-wrapper .fltr-cat#'+category);
 			
 			element.find('.fltr-check[value="'+properties+'"]').addClass('active');
 		}
@@ -57,7 +56,7 @@ $(document).ready(function() {
 
 	function createFilter() {
 		//create json array with filter
-		$('.filters-wrapper .fltr-cat').each(function() {
+		$('.fltr-wrapper .fltr-cat').each(function() {
 			var array = [];
 			var category = $(this).attr('id');
 			
@@ -93,8 +92,8 @@ $(document).ready(function() {
 	       },
            dataType: 'html',
 	       success: function(data) {
-	       	   $('.table-data').children().remove();
-	           $('.table-data').html(data);
+	       	   $('.fltr-data-wrapper').children().remove();
+	           $('.fltr-data-wrapper').html(data);
 	       }
 	    });
 	}

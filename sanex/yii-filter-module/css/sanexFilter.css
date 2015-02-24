@@ -1,6 +1,11 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700);
 @import url(http://fonts.googleapis.com/css?family=Maven+Pro:400,700);
 
+.fltr-wrapper
+{
+	margin-bottom: 50px;
+}
+
 .fltr-cat
 {
 	margin: 0px 0px 20px 0px;

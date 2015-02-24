@@ -32,11 +32,16 @@ class FilterController extends Controller
         if (!is_array($filter))
             throw new NotFoundHttpException("Filter properties must be as array", 1);
 
-        return $this->renderPartial('filter', [
+        return $this->renderPartial('filter-list', [
             'filter' => $filter
         ]);
     }
 
+    /**
+     * GET request - create $where array, create $getParams array
+     *  $where array contain all get parameters with names same as model attributes names
+     *  $getParams array contain all other get parameters
+     */
     public function actionShowDataGet()
     {
         $modelClass = $this->module->modelClass;
@@ -46,9 +51,6 @@ class FilterController extends Controller
         $where = array();
         $getParams = array();
 
-        //GET request - create $where array, create $getParams array
-        //$where array contain all get parameters with names same as model attributes names
-        //$getParams array contain all other get parameters
         if (Yii::$app->request->get('filter') && !Yii::$app->request->getIsAjax())
         {
             $get = Yii::$app->request->get();
@@ -78,9 +80,18 @@ class FilterController extends Controller
             $data = $model->find()->where($where)->all();
         }
 
-        return $data;
+        $this->module->viewParams['data'] = $data;
+        return $this->renderPartial('filter-data-wrapper', [
+            'viewParams' => $this->module->viewParams,
+            'viewFile' => $this->module->viewFile
+        ]);
     }
 
+    /**
+     *POST AJAX request - create $where array, create $getParams array
+     *$where array contain all get parameters with names same as model attributes names
+     *$getParams array contain all other get parameters
+     */   
     public function actionShowDataPost()
     {
         if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) 
@@ -94,10 +105,7 @@ class FilterController extends Controller
 
             $where = array();
             $getParams = array();
-
-            //POST AJAX request - create $where array, create $getParams array
-            //$where array contain all get parameters with names same as model attributes names
-            //$getParams array contain all other get parameters
+         
             $filter = json_decode($_POST['filter'], true);
             foreach ($filter as $name => $properties) 
             {            
@@ -119,8 +127,13 @@ class FilterController extends Controller
                 $data = $model->find()->where($where)->all();
             }
 
-            return $this->renderPartial($view, [
-                'data' => $data
+
+            $viewParams = $parameters['viewParams'];
+            $viewParams['data'] = $data;
+
+            return $this->renderPartial('filter-data-wrapper', [
+                'viewParams' => $viewParams,
+                'viewFile' => $parameters['viewFile']
             ]);
         } else {
             throw new NotFoundHttpException("Page not found.", 1);
