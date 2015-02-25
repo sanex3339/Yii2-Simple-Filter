@@ -8,8 +8,29 @@ Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
 ###Right now module may not work for you, because v0.000001preAlphaBeta (but it work for me)
 
 Installation:
-Put 'sanex' folder to vendor folder, then add module to Yii2 like all other modules
-
+Put 'sanex' folder to vendor folder, then add to 
+`vendor/yiisoft/extensions.php`
+following code:
+```
+'sanex/yii-filter-module' => 
+array (
+    'name' => 'sanex/yii-filter-module',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@sanex/filter' => $vendorDir . '/sanex/yii-filter-module',
+    ),
+    'bootstrap' => 'sanex\\filter\\Bootstrap',
+),
+```
+..and register module in config file:
+```
+'modules' => [
+    'filter' => [
+        'class' => 'sanex\filter\SanexFilter',
+    ],
+],
+```
 How to use?
 In controller, which has view (main view), where you want show data with filter, set 3 parameters:
 ```
