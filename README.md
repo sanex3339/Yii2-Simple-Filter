@@ -45,43 +45,37 @@ $filter = Yii::$app->getModule('filter'); // - filter object
 
 $viewFile - ajax view (not main view!!!). You must create that view file before continue.
 
-In main view, you must call setFilter() method with parameters:
+In main view, you must call setFilter() method contain array with filter parameters:
 
 ```
 $filter->setFilter([
-    'filter' => 
     [
-        [
-            'property' => 'color',
-            'caption' => 'Цвет',
-            'values' => [
-                'Red',
-                'Green',
-                'Blue',
-                'Black'
-            ]
-        ],
-        [
-            'property' => 'size',
-            'caption' => 'Size',
-            'values' => [
-                '45x45',
-                '50x50',
-                '60x60'
-            ]
+        'property' => 'color',
+        'caption' => 'Цвет',
+        'values' => [
+            'Red',
+            'Green',
+            'Blue',
+            'Black'
         ]
-    ], 
-    'modelClass' => $modelClass, // - model class
-    'viewFile' => $viewFile,  // - view file
-    'setDataProvider' => true // - if true - return data as dataProvider, if false or not set - return data as model 
+    ],
+    [
+        'property' => 'size',
+        'caption' => 'Size',
+        'values' => [
+            '45x45',
+            '50x50',
+            '60x60'
+        ]
+    ]
 ]);
 ```
 Then, where you want to render ajax view with filtered data, call renderDataView():
 ```
-$filter->renderDataView();
+$filter->renderDataView($viewFile, $modelClass, 1);
 ```
-
-This method may have array with parameters, that will be send to ajax view:
-```
-$filter->renderDataView(['param1' => 'param1', 'var' => $var]);
-```
+renderDataView($viewFile, $modelClass, $setDataProvider = false, $viewParams = [])
+$viewFile - ajax view file;
+$modelClass - model class;
+(bool)$setDataProvider - if true - return data as dataProvider, if false or not set - return data as model;
+(array)$viewParams - parameters, that will be send to ajax view.

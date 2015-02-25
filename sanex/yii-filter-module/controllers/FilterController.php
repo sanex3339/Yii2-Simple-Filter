@@ -14,7 +14,7 @@ class FilterController extends Controller
 {
     private $data, $model, $view;
 
-	public function actions()
+    public function actions()
     {
         return [
             'error' => [
@@ -26,7 +26,6 @@ class FilterController extends Controller
     public function actionSetFilter()
     {
         $filter = $this->module->filter;
-
         if (!$filter)
             throw new NotFoundHttpException("Invalid or empty filter properties", 1);
         if (!is_array($filter))

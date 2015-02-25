@@ -2,6 +2,7 @@
 
 namespace sanex\filter;
 
+use ReflectionMethod;
 use sanex\filter\controllers\FilterController;
 use yii\web\Session;
 
@@ -15,27 +16,27 @@ class SanexFilter extends \yii\base\Module
            $viewFile,
            $viewParams;
 
-    public function init()
+    public function init() 
     {
         parent::init();
+
         $this->session = new Session;
         $this->session->open();
     }
 
     public function setFilter($filter)
     {
-        foreach($filter as $key => $value){
-            $this->{$key} = $value;
-        }
-        $this->session['SanexFilter'] = $filter;
-    	return $this->runAction('filter/set-filter');
+        $this->filter = $filter;
+        return $this->runAction('filter/set-filter');
     }
 
-    public function renderDataView($viewParams = [])
+    public function renderDataView($viewFile, $modelClass, $setDataProvider = false, $viewParams = [])
     {
-        $this->viewParams = $viewParams;
-        $tempSessionData =  $this->session['SanexFilter'];
-        $tempSessionData['viewParams'] = $viewParams;
+        $this->viewFile = $tempSessionData['viewFile'] = $viewFile;
+        $this->modelClass = $tempSessionData['modelClass'] = $modelClass;
+        $this->setDataProvider = $tempSessionData['setDataProvider'] = $setDataProvider;
+        $this->viewParams = $tempSessionData['viewParams'] = $viewParams;
+
         $this->session['SanexFilter'] = $tempSessionData;
 
         return $this->runAction('filter/show-data-get');
