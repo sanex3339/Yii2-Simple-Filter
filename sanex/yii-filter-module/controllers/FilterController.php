@@ -4,9 +4,7 @@ namespace sanex\filter\controllers;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\helpers\FileHelper;
 use yii\web\Controller;
-use yii\web\ErrorAction;
 use yii\web\NotFoundHttpException;
 use yii\web\Session;
 
@@ -20,9 +18,7 @@ class FilterController extends Controller
         if (!is_array($filter))
             throw new NotFoundHttpException("Filter properties must be as array", 1);
 
-        return $this->renderPartial('filter-list', [
-            'filter' => $filter
-        ]);
+        return $this->renderPartial('filter-list', ['filter' => $filter]);
     }
 
     /**
@@ -35,8 +31,7 @@ class FilterController extends Controller
         $model = $this->module->model;
         $attributes = $model->attributes();
 
-        $where = [];
-        $getParams = [];
+        $where = $getParams = [];
 
         if (Yii::$app->request->get('filter') && !Yii::$app->request->getIsAjax()) {
             $get = Yii::$app->request->get();
@@ -52,13 +47,17 @@ class FilterController extends Controller
             }
         } 
 
-        if ($this->module->setDataProvider) {
-            $data = new ActiveDataProvider([
-                'query' => $model->find()->where($where),
-                'sort' => false
-            ]);
+        if (isset($this->module->query)) {
+            $query = $this->module->query;
         } else {
-            $data = $model->find()->where($where)->all();
+            $query = $model->find();
+        } 
+        $query->andWhere($where);
+
+        if ($this->module->setDataProvider) {
+            $data = new ActiveDataProvider(['query' => $query, 'sort' => false]);
+        } else {
+            $data = $query;
         }
 
         $this->module->viewParams['sanexFilterData'] = $data;
@@ -74,15 +73,18 @@ class FilterController extends Controller
      *$getParams array contain all other get parameters
      */   
     public function actionShowDataPost()
-    {
+    {   
         if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) {
             $parameters = $this->module->session['SanexFilter'];
+
+            echo"<pre>";
+            //print_r($this->module->session['SanexFilter']);
+            echo"</pre>";
 
             $model = $parameters['model'];
             $attributes = $model->attributes();
 
-            $where = [];
-            $getParams = [];
+            $where = $getParams = [];
          
             $filter = json_decode($_POST['filter'], true);
             foreach ($filter as $name => $properties) {            
@@ -91,18 +93,28 @@ class FilterController extends Controller
                 } else {
                     $getParams[$name] = explode(',', $properties['properties']);
                 }       
+            }            
+
+            if (isset($parameters['query'])) {
+                $query = $parameters['query'];
+            } else {
+                $query = $model->find();
             }
+            $query->andWhere($where);
+
+            echo"<pre>";
+            //print_r($query);
+            echo"</pre>";
 
             if ($parameters['setDataProvider']) {
                 $data = new ActiveDataProvider([
-                    'query' => $model->find()->where($where),
+                    'query' => $query,
                     'sort' => false
                 ]);
             } else {
-                $data = $model->find()->where($where)->all();
+                $data = $query;
             }
 
-            $view = $parameters['viewFile'];
             $viewParams = $parameters['viewParams'];
             $viewParams['sanexFilterData'] = $data;
 

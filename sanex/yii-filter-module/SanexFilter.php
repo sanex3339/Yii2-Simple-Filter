@@ -12,6 +12,8 @@ class SanexFilter extends \yii\base\Module
            $model, 
            $session,
            $setDataProvider = false,
+           $query,
+           $tempSessionData,
            $viewFile,
            $viewParams;
 
@@ -31,13 +33,18 @@ class SanexFilter extends \yii\base\Module
 
     public function renderDataView($viewFile, $model, $setDataProvider = false, $viewParams = [])
     {
-        $this->viewFile = $tempSessionData['viewFile'] = $viewFile;
-        $this->model = $tempSessionData['model'] = $model;
-        $this->setDataProvider = $tempSessionData['setDataProvider'] = $setDataProvider;
-        $this->viewParams = $tempSessionData['viewParams'] = $viewParams;
-
-        $this->session['SanexFilter'] = $tempSessionData;
+        $this->viewFile = $this->tempSessionData['viewFile'] = $viewFile;
+        $this->model = $this->tempSessionData['model'] = $model;
+        $this->setDataProvider = $this->tempSessionData['setDataProvider'] = $setDataProvider;
+        $this->viewParams = $this->tempSessionData['viewParams'] = $viewParams;
+        $this->session['SanexFilter'] = $this->tempSessionData;
 
         return $this->runAction('filter/show-data-get');
+    }
+
+    public function setQuery($query)
+    {
+        $this->query = $this->tempSessionData['query'] = $query;
+        $this->session['SanexFilter'] = $this->tempSessionData; 
     }
 }
