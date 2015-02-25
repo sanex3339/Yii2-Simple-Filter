@@ -32,7 +32,7 @@ class FilterController extends Controller
      */
     public function actionShowDataGet()
     {
-        $model = new $this->module->modelClass;
+        $model = $this->module->model;
         $attributes = $model->attributes();
 
         $where = [];
@@ -78,7 +78,7 @@ class FilterController extends Controller
         if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) {
             $parameters = $this->module->session['SanexFilter'];
 
-            $model = new $parameters['modelClass'];
+            $model = $parameters['model'];
             $attributes = $model->attributes();
 
             $where = [];

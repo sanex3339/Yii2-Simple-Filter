@@ -1,11 +1,9 @@
 # Simple-Yii2-Checkbox-Filter-Module
 Simple Yii2 Checkbox Filter Module
 
-Yii2 filter module for personal use v0.000001preAlphaBeta
+Yii2 filter module for personal use v0.01a
 
 Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
-
-###Right now module may not work for you, because v0.000001preAlphaBeta (but it work for me)
 
 Installation:
 Put `sanex` folder to vendor folder, then add to 
@@ -38,7 +36,7 @@ use sanex\filter\Module;
 
 ...
 
-$modelClass = 'sanex\catalog\models\Catalog'; // - full class name for model with namespaces
+$model = new Catalog; // - model, which data you want to filter
 $viewFile = '@sanex/catalog/views/catalog/catalog-ajax'; // - alias (or path) to ajax view, where you want to show data
 $filter = Yii::$app->getModule('filter'); // - filter object
 ```
@@ -51,7 +49,7 @@ In main view, you must call `setFilter()` method contain array with filter param
 $filter->setFilter([
     [
         'property' => 'color',
-        'caption' => 'Цвет',
+        'caption' => 'Color',
         'values' => [
             'Red',
             'Green',
@@ -72,13 +70,13 @@ $filter->setFilter([
 ```
 Then, where you want to render ajax view with filtered data, call `renderDataView()`:
 ```
-$filter->renderDataView($viewFile, $modelClass, 1, ['testParam' => $testParam]);
+$filter->renderDataView($viewFile, $model, 1, ['testParam' => $testParam]);
 ```
-`renderDataView($viewFile, $modelClass, $setDataProvider = false, $viewParams = [])`
+`renderDataView($viewFile, $model, $setDataProvider = false, $viewParams = [])`
 
 `$viewFile` - ajax view file;
 
-`$modelClass` - model class;
+`$model` - model;
 
 `(bool)$setDataProvider` - if true - return data as dataProvider, if false or not set - return data as model;
 

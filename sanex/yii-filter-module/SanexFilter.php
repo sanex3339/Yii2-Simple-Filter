@@ -9,7 +9,7 @@ class SanexFilter extends \yii\base\Module
 {
     public $controllerNamespace = 'sanex\filter\controllers',
            $filter, 
-           $modelClass, 
+           $model, 
            $session,
            $setDataProvider = false,
            $viewFile,
@@ -29,10 +29,10 @@ class SanexFilter extends \yii\base\Module
         return $this->runAction('filter/set-filter');
     }
 
-    public function renderDataView($viewFile, $modelClass, $setDataProvider = false, $viewParams = [])
+    public function renderDataView($viewFile, $model, $setDataProvider = false, $viewParams = [])
     {
         $this->viewFile = $tempSessionData['viewFile'] = $viewFile;
-        $this->modelClass = $tempSessionData['modelClass'] = $modelClass;
+        $this->model = $tempSessionData['model'] = $model;
         $this->setDataProvider = $tempSessionData['setDataProvider'] = $setDataProvider;
         $this->viewParams = $tempSessionData['viewParams'] = $viewParams;
 
