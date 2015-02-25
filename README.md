@@ -83,3 +83,6 @@ $filter->renderDataView($viewFile, $modelClass, 1, ['testParam' => $testParam]);
 `(bool)$setDataProvider` - if true - return data as dataProvider, if false or not set - return data as model;
 
 `(array)$viewParams` - parameters, that will be send to ajax view.
+
+In ajax view, you can get filtered data (model or dataProvider) through `$sanexFilterData` variable.
+#####Note! Module pass to ajax view only data! You must create in that ajax view `<table></table>` or use GridView widget to show data, same way as with all other Yii2 models!

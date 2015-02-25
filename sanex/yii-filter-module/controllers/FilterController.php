@@ -61,7 +61,7 @@ class FilterController extends Controller
             $data = $model->find()->where($where)->all();
         }
 
-        $this->module->viewParams['data'] = $data;
+        $this->module->viewParams['sanexFilterData'] = $data;
         return $this->renderPartial('filter-data-wrapper', [
             'viewFile' => $this->module->viewFile,
             'viewParams' => $this->module->viewParams
@@ -104,10 +104,10 @@ class FilterController extends Controller
 
             $view = $parameters['viewFile'];
             $viewParams = $parameters['viewParams'];
-            $viewParams['data'] = $data;
+            $viewParams['sanexFilterData'] = $data;
 
             return $this->renderPartial('filter-data-wrapper', [
-                'viewFile' => $view,
+                'viewFile' => $parameters['viewFile'],
                 'viewParams' => $viewParams
             ]);
         } else {
