@@ -72,7 +72,7 @@ $filter->setFilter([
 ```
 Then, where you want to render ajax view with filtered data, call renderDataView():
 ```
-$filter->renderDataView($viewFile, $modelClass, 1);
+$filter->renderDataView($viewFile, $modelClass, 1, $viewParams = ['testParam' => $testParam]);
 ```
 renderDataView($viewFile, $modelClass, $setDataProvider = false, $viewParams = [])
 $viewFile - ajax view file;
