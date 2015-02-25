@@ -8,7 +8,7 @@ Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
 ###Right now module may not work for you, because v0.000001preAlphaBeta (but it work for me)
 
 Installation:
-Put 'sanex' folder to vendor folder, then add to 
+Put `sanex` folder to vendor folder, then add to 
 `vendor/yiisoft/extensions.php`
 following code:
 ```
@@ -43,9 +43,9 @@ $viewFile = '@sanex/catalog/views/catalog/catalog-ajax'; // - alias (or path) to
 $filter = Yii::$app->getModule('filter'); // - filter object
 ```
 
-$viewFile - ajax view (not main view!!!). You must create that view file before continue.
+`$viewFile` - ajax view (not main view!!!). You must create that view file before continue.
 
-In main view, you must call setFilter() method contain array with filter parameters:
+In main view, you must call `setFilter()` method contain array with filter parameters:
 
 ```
 $filter->setFilter([
@@ -70,12 +70,16 @@ $filter->setFilter([
     ]
 ]);
 ```
-Then, where you want to render ajax view with filtered data, call renderDataView():
+Then, where you want to render ajax view with filtered data, call `renderDataView()`:
 ```
-$filter->renderDataView($viewFile, $modelClass, 1, $viewParams = ['testParam' => $testParam]);
+$filter->renderDataView($viewFile, $modelClass, 1, ['testParam' => $testParam]);
 ```
-renderDataView($viewFile, $modelClass, $setDataProvider = false, $viewParams = [])
-$viewFile - ajax view file;
-$modelClass - model class;
-(bool)$setDataProvider - if true - return data as dataProvider, if false or not set - return data as model;
-(array)$viewParams - parameters, that will be send to ajax view.
+`renderDataView($viewFile, $modelClass, $setDataProvider = false, $viewParams = [])`
+
+`$viewFile` - ajax view file;
+
+`$modelClass` - model class;
+
+`(bool)$setDataProvider` - if true - return data as dataProvider, if false or not set - return data as model;
+
+`(array)$viewParams` - parameters, that will be send to ajax view.
