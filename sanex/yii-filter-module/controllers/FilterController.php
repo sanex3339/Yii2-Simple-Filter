@@ -12,17 +12,6 @@ use yii\web\Session;
 
 class FilterController extends Controller
 {
-    private $data, $model, $view;
-
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => ErrorAction::className()
-            ],
-        ];
-    }
-
     public function actionSetFilter()
     {
         $filter = $this->module->filter;
@@ -43,25 +32,19 @@ class FilterController extends Controller
      */
     public function actionShowDataGet()
     {
-        $modelClass = $this->module->modelClass;
-        $model = new $modelClass;
+        $model = new $this->module->modelClass;
         $attributes = $model->attributes();
 
-        $where = array();
-        $getParams = array();
+        $where = [];
+        $getParams = [];
 
-        if (Yii::$app->request->get('filter') && !Yii::$app->request->getIsAjax())
-        {
+        if (Yii::$app->request->get('filter') && !Yii::$app->request->getIsAjax()) {
             $get = Yii::$app->request->get();
-            foreach ($get as $category => $property) 
-            {
+            foreach ($get as $category => $property) {
                 if (!is_array($property))
-                {
                     $property = array($property);
-                }
 
-                if(array_search($category, $attributes))
-                {
+                if(array_search($category, $attributes)) {
                     $where[$category] = $property;
                 } else {
                     $getParams[$category] = $property;
@@ -69,8 +52,7 @@ class FilterController extends Controller
             }
         } 
 
-        if ($this->module->setDataProvider)
-        {
+        if ($this->module->setDataProvider) {
             $data = new ActiveDataProvider([
                 'query' => $model->find()->where($where),
                 'sort' => false
@@ -81,8 +63,8 @@ class FilterController extends Controller
 
         $this->module->viewParams['data'] = $data;
         return $this->renderPartial('filter-data-wrapper', [
-            'viewParams' => $this->module->viewParams,
-            'viewFile' => $this->module->viewFile
+            'viewFile' => $this->module->viewFile,
+            'viewParams' => $this->module->viewParams
         ]);
     }
 
@@ -93,31 +75,25 @@ class FilterController extends Controller
      */   
     public function actionShowDataPost()
     {
-        if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) 
-        {
+        if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) {
             $parameters = $this->module->session['SanexFilter'];
-            $modelClass = $parameters['modelClass'];
-            $view = $parameters['viewFile'];
 
-            $model = new $modelClass;
+            $model = new $parameters['modelClass'];
             $attributes = $model->attributes();
 
-            $where = array();
-            $getParams = array();
+            $where = [];
+            $getParams = [];
          
             $filter = json_decode($_POST['filter'], true);
-            foreach ($filter as $name => $properties) 
-            {            
-                if(array_search($name, $attributes))
-                {
+            foreach ($filter as $name => $properties) {            
+                if(array_search($name, $attributes)) {
                     $where[$name] = explode(',', $properties['properties']); 
                 } else {
                     $getParams[$name] = explode(',', $properties['properties']);
                 }       
             }
 
-            if ($parameters['setDataProvider'])
-            {
+            if ($parameters['setDataProvider']) {
                 $data = new ActiveDataProvider([
                     'query' => $model->find()->where($where),
                     'sort' => false
@@ -126,13 +102,13 @@ class FilterController extends Controller
                 $data = $model->find()->where($where)->all();
             }
 
-
+            $view = $parameters['viewFile'];
             $viewParams = $parameters['viewParams'];
             $viewParams['data'] = $data;
 
             return $this->renderPartial('filter-data-wrapper', [
-                'viewParams' => $viewParams,
-                'viewFile' => $parameters['viewFile']
+                'viewFile' => $view,
+                'viewParams' => $viewParams
             ]);
         } else {
             throw new NotFoundHttpException("Page not found.", 1);

@@ -24,7 +24,7 @@ class SanexFilter extends \yii\base\Module
         $this->session->open();
     }
 
-    public function setFilter($filter)
+    public function setFilter($filter = [])
     {
         $this->filter = $filter;
         return $this->runAction('filter/set-filter');
