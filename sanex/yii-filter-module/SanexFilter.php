@@ -2,7 +2,6 @@
 
 namespace sanex\filter;
 
-use sanex\filter\controllers\FilterController;
 use yii\web\Session;
 
 class SanexFilter extends \yii\base\Module

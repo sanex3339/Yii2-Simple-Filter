@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	var filter = {};
 
-	getCheckStateByUrlParams(); //get checkbox state from GET
+	getCheckStateByUrlParams(); //get checkbox state from GET query
 
 	$('.fltr-wrapper .fltr-check').click(function() {
 		createUrl($(this));
@@ -9,7 +9,7 @@ $(document).ready(function() {
 	});
 
     function getCheckStateByUrlParams() {
-    	//get GET params array from url
+    	//get all GET params array from url
     	var urlParams;
 		(window.onpopstate = function () {
 		    var match,
@@ -30,8 +30,8 @@ $(document).ready(function() {
 		
 		delete urlParams['filter']; //delete "filter" GET param
 
-		//ищем все параметры, их значения
-		//для каждого значения ищем соответствующий ему чекбокс, присваиваем ему класс 'check'
+		//find all params and his values
+		//for each value find similar checkbox, and set class 'active' for him
 		for (params in urlParams) {
 			var category = params.split('[', 1);
 			var properties = urlParams[params];
@@ -41,6 +41,7 @@ $(document).ready(function() {
 		}
     }
 
+    //create GET url with help of jquery.query-object.js
     function createUrl(elem) {
     	var category = elem.parent().attr('id');
 		var url;
@@ -54,18 +55,18 @@ $(document).ready(function() {
 		window.history.pushState('', '', url);
     }
 
+    //create json array with filter params
 	function createFilter() {
-		//create json array with filter
 		$('.fltr-wrapper .fltr-cat').each(function() {
 			var array = [];
 			var category = $(this).attr('id');
 			
-			//Ищем все элементы внутри категории
+			//find all elements inside category
 			$(this).find('.fltr-check.active').each(function(index) {
-				array[index] = $(this).attr('value'); //По каждому найденому элементу добавляем его значение в массив
+				array[index] = $(this).attr('value'); //for each found element put his value into array
 			});
 
-			var property = array.join(); //Делаем из полученного массива строку
+			var property = array.join(); //create string from array
 
 			//Делаем новый объект, с ключом - имя категории, значение - другой элемент... 
 			//...с ключом properties, значение - сформированная строка
@@ -74,7 +75,7 @@ $(document).ready(function() {
 					properties: property
 				};
 			} else {
-				delete filter[category]; //Удаляем все пустые элементы из объекта
+				delete filter[category]; //delete all empty values from filter object
 			}
 		});
 
@@ -82,9 +83,11 @@ $(document).ready(function() {
 		sendFilter(json);
 	}
 
+	//send filter params to method actionShowDataPost() of FilterController.php file
+	//success data - html data of ajax view
 	function sendFilter(filter) {
 		$.ajax({
-	       url: '/show-data-ajax/',
+	       url: '/sanex-filter-ajax/',
 	       type: 'POST',
 	       data: {
 	       		_csrf: yii.getCsrfToken(),

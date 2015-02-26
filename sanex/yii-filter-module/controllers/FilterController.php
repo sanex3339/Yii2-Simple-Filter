@@ -23,14 +23,13 @@ class FilterController extends Controller
 
     /**
      * GET request - create $where array, create $getParams array
-     *  $where array contain all get parameters with names same as model attributes names
-     *  $getParams array contain all other get parameters
+     * $where array contain all get parameters with names same as model attributes names
+     * $getParams array contain all other get parameters
      */
     public function actionShowDataGet()
     {
         $model = $this->module->model;
         $attributes = $model->attributes();
-
         $where = $getParams = [];
 
         if (Yii::$app->request->get('filter') && !Yii::$app->request->getIsAjax()) {
@@ -38,7 +37,6 @@ class FilterController extends Controller
             foreach ($get as $category => $property) {
                 if (!is_array($property))
                     $property = array($property);
-
                 if(array_search($category, $attributes)) {
                     $where[$category] = $property;
                 } else {
@@ -52,32 +50,25 @@ class FilterController extends Controller
            $where = array_merge_recursive($query->where, $where); 
         $query->where($where);
 
-        if ($this->module->setDataProvider) {
-            $data = new ActiveDataProvider(['query' => $query, 'sort' => false]);
-        } else {
-            $data = $query;
-        }
+        $data = $this->module->setDataProvider ? new ActiveDataProvider(['query' => $query, 'sort' => false]) : $query;
 
         $this->module->viewParams['sanexFilterData'] = $data;
         return $this->renderPartial('filter-data-wrapper', [
-            'viewFile' => $this->module->viewFile,
-            'viewParams' => $this->module->viewParams
+            'viewFile' => $this->module->viewFile, 'viewParams' => $this->module->viewParams
         ]);
     }
 
     /**
-     *POST AJAX request - create $where array, create $getParams array
-     *$where array contain all get parameters with names same as model attributes names
-     *$getParams array contain all other get parameters
+     * POST AJAX request - create $where array, create $getParams array
+     * $where array contain all get parameters with names same as model attributes names
+     * $getParams array contain all other get parameters
      */   
     public function actionShowDataPost()
     {   
         if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) {
             $parameters = $this->module->session['SanexFilter'];
-
             $model = $parameters['model'];
             $attributes = $model->attributes();
-
             $where = $getParams = [];
             
             $filter = json_decode($_POST['filter'], true);
@@ -94,21 +85,12 @@ class FilterController extends Controller
                 $where = array_merge_recursive($query->where, $where);
             $query->where($where);
 
-            if ($parameters['setDataProvider']) {
-                $data = new ActiveDataProvider([
-                    'query' => $query,
-                    'sort' => false
-                ]);
-            } else {
-                $data = $query;
-            }
+            $data = $parameters['setDataProvider'] ? new ActiveDataProvider(['query' => $query, 'sort' => false]) : $query;
 
             $viewParams = $parameters['viewParams'];
             $viewParams['sanexFilterData'] = $data;
-
             return $this->renderPartial('filter-data-wrapper', [
-                'viewFile' => $parameters['viewFile'],
-                'viewParams' => $viewParams
+                'viewFile' => $parameters['viewFile'], 'viewParams' => $viewParams
             ]);
         } else {
             throw new NotFoundHttpException("Page not found.", 1);

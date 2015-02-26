@@ -11,11 +11,9 @@ class FilterAsset extends AssetBundle
 {
     public $sourcePath = '@sanex/filter';
     public $baseUrl = '@web/assets/';
-    //public $basePath = '@webroot/assets/';
-    
 
     public $css = [
-        'css/sanexFilter.css'
+        'css/sanex-filter.css'
     ];
 
     public $js = [
