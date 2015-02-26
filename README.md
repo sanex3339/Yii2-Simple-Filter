@@ -43,6 +43,15 @@ $filter = Yii::$app->getModule('filter'); // - filter object
 
 `$viewFile` - ajax view (not main view!!!). You must create that view file before continue.
 
+As default, result query with filter looks like `SELECT COUNT(*) FROM 'catalog' WHERE 'color' IN ('Зеленый', 'Синий')`
+If you want create custom query with filter you must call setQuery() method in controller with `\yii\db\ActiveQuery` object as method parameter, that contain query parameters.
+
+```
+$query = new \yii\db\ActiveQuery($model);
+$query->select(['id', 'name', 'size', 'price', 'country'])->where(['country' => 'Canada'])->orderBy(['price' => SORT_ASC]); 
+$filter->setQuery($query);
+```
+
 In main view, you must call `setFilter()` method contain array with filter parameters:
 
 ```
