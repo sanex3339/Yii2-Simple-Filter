@@ -45,10 +45,11 @@ $filter = Yii::$app->getModule('filter'); // - filter object
 
 As default, result query with filter looks like `SELECT COUNT(*) FROM 'catalog' WHERE 'color' IN ('Green', 'Red')`
 If you want create custom query with filter you must call setQuery() method in controller with `\yii\db\ActiveQuery` object as method parameter, that contain query parameters.
+##### custom WHERE clause not yet supported!
 
 ```
 $query = new \yii\db\ActiveQuery($model);
-$query->select(['id', 'name', 'size', 'price', 'country'])->where(['country' => 'Canada'])->orderBy(['price' => SORT_ASC]); 
+$query->select(['id', 'name', 'size', 'price', 'country'])->orderBy(['price' => SORT_ASC]); 
 $filter->setQuery($query);
 ```
 
