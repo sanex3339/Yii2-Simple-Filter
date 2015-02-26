@@ -50,7 +50,7 @@ class FilterController extends Controller
            $where = array_merge_recursive($query->where, $where); 
         $query->where($where);
 
-        $data = $this->module->setDataProvider ? new ActiveDataProvider(['query' => $query, 'sort' => false]) : $query;
+        $data = $this->module->setDataProvider ? new ActiveDataProvider(['query' => $query, 'sort' => false]) : $query->all();
 
         $this->module->viewParams['sanexFilterData'] = $data;
         return $this->renderPartial('filter-data-wrapper', [
@@ -85,7 +85,7 @@ class FilterController extends Controller
                 $where = array_merge_recursive($query->where, $where);
             $query->where($where);
 
-            $data = $parameters['setDataProvider'] ? new ActiveDataProvider(['query' => $query, 'sort' => false]) : $query;
+            $data = $parameters['setDataProvider'] ? new ActiveDataProvider(['query' => $query, 'sort' => false]) : $query->all();
 
             $viewParams = $parameters['viewParams'];
             $viewParams['sanexFilterData'] = $data;
