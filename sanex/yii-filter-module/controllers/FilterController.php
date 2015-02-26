@@ -47,11 +47,7 @@ class FilterController extends Controller
             }
         } 
 
-        if (isset($this->module->query)) {
-            $query = $this->module->query;
-        } else {
-            $query = $model->find();
-        } 
+        $query = $this->module->query ? $this->module->query : $model->find();
         $query->andWhere($where);
 
         if ($this->module->setDataProvider) {
@@ -77,15 +73,11 @@ class FilterController extends Controller
         if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) {
             $parameters = $this->module->session['SanexFilter'];
 
-            echo"<pre>";
-            //print_r($this->module->session['SanexFilter']);
-            echo"</pre>";
-
             $model = $parameters['model'];
             $attributes = $model->attributes();
 
             $where = $getParams = [];
-         
+            
             $filter = json_decode($_POST['filter'], true);
             foreach ($filter as $name => $properties) {            
                 if(array_search($name, $attributes)) {
@@ -95,16 +87,8 @@ class FilterController extends Controller
                 }       
             }            
 
-            if (isset($parameters['query'])) {
-                $query = $parameters['query'];
-            } else {
-                $query = $model->find();
-            }
+            $query = isset($parameters['query']) ? clone $parameters['query'] : $model->find();
             $query->andWhere($where);
-
-            echo"<pre>";
-            //print_r($query);
-            echo"</pre>";
 
             if ($parameters['setDataProvider']) {
                 $data = new ActiveDataProvider([
