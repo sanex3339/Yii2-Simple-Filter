@@ -47,11 +47,9 @@ class FilterController extends Controller
             }
         } 
 
-        $query = $this->module->query ? $this->module->query : $model->find();
-
-        if($query->where)
-            throw new NotFoundHttpException("WHERE clause not yet supported!", 1);
-
+        $query = $this->module->query ? clone $this->module->query : $model->find();
+        if ($query->where)
+           $where = array_merge_recursive($query->where, $where); 
         $query->where($where);
 
         if ($this->module->setDataProvider) {
@@ -83,12 +81,6 @@ class FilterController extends Controller
             $where = $getParams = [];
             
             $filter = json_decode($_POST['filter'], true);
-            foreach ($where as $key => $value) {
-                if (!is_array($value))
-                {
-                    $where[$key] = [];
-                }
-            }
             foreach ($filter as $name => $properties) {            
                 if(array_search($name, $attributes)) {
                     $where[$name] = explode(',', $properties['properties']); 
@@ -98,6 +90,8 @@ class FilterController extends Controller
             }           
 
             $query = isset($parameters['query']) ? clone $parameters['query'] : $model->find();
+            if ($query->where)
+                $where = array_merge_recursive($query->where, $where);
             $query->where($where);
 
             if ($parameters['setDataProvider']) {
