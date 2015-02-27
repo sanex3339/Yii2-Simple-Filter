@@ -1,8 +1,12 @@
 <?php
     use sanex\filter\assets\FilterAsset;
     use yii\helpers\Html;
+    use yii\web\View;
 
     FilterAsset::register($this);
+
+    $ajaxVar = $ajax ? 'true' : 'false';
+    $this->registerJs('var SanexFilterAjax = '.$ajaxVar, View::POS_HEAD);
 ?>
 
 <div class="fltr-wrapper">

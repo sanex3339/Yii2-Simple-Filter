@@ -18,7 +18,7 @@ class FilterController extends Controller
         if (!is_array($filter))
             throw new NotFoundHttpException("Filter properties must be as array", 1);
 
-        return $this->renderPartial('filter-list', ['filter' => $filter]);
+        return $this->renderPartial('filter-list', ['filter' => $filter, 'ajax' => $this->module->ajax]);
     }
 
     /**

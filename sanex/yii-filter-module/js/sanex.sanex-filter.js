@@ -4,8 +4,12 @@ $(document).ready(function() {
 
 	getCheckStateByUrlParams(); //get checkbox state from GET query
 
+	if (!SanexFilterAjax)
+		createFilterUrls();
+
 	$('.fltr-wrapper .fltr-check').click(function() {
-		createUrl($(this));
+		if (SanexFilterAjax)
+			createUrl($(this));
 		createFilter();
 	});
 
@@ -86,6 +90,21 @@ $(document).ready(function() {
 	            replaceUrls(wrapper);
 	       }
 	    });
+	}
+
+	function createFilterUrls()
+	{
+		$('.fltr-wrapper .fltr-check').each(function(){
+			var elem = $(this);
+			var getQuery = window.location.search.substring(1);
+			var category = elem.parent().attr('id');
+			if (!elem.hasClass('active')) {
+				var filterGetParameter = $.query.set('filter', '1').SET(category+'[]', elem.attr('value')).toString();
+			} else {
+				var filterGetParameter = $.query.remove(category, elem.attr('value'));
+			}
+			$(this).attr('href', filterGetParameter);
+		});
 	}
 
 	function replaceUrls(elem)

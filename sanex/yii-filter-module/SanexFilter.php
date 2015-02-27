@@ -8,7 +8,8 @@ use yii\helpers\Url;
 
 class SanexFilter extends \yii\base\Module
 {
-    public $controllerNamespace = 'sanex\filter\controllers',
+    public $ajax,
+           $controllerNamespace = 'sanex\filter\controllers',
            $filter, 
            $model, 
            $session,
@@ -27,9 +28,10 @@ class SanexFilter extends \yii\base\Module
         $this->session->open();
     }
 
-    public function setFilter($filter = [])
+    public function setFilter($filter = [], $ajax)
     {
         $this->filter = $filter;
+        $this->ajax = $ajax === true ? true : false;
 
         return $this->runAction('filter/set-filter');
     }
