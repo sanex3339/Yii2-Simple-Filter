@@ -32,7 +32,7 @@ class FilterController extends Controller
         $attributes = $model->attributes();
         $where = $getParams = [];
 
-        if (Yii::$app->request->get('filter') && !Yii::$app->request->getIsAjax()) {
+        if (Yii::$app->request->get('filter')) {
             $get = Yii::$app->request->get();
             foreach ($get as $category => $property) {
                 if (!is_array($property))
