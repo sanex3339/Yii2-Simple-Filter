@@ -5,11 +5,11 @@ $(document).ready(function() {
 	getCheckStateByUrlParams(); //get checkbox state from GET query
 
 	if (!SanexFilterAjax)
-		createFilterUrls();
+		createFilterUrls(); //enable url generation for filter checkboxes when ajax disabled
 
 	$('.fltr-wrapper .fltr-check').click(function() {
 		if (SanexFilterAjax)
-			createUrl($(this));
+			createUrl($(this)); //disable history url generation when ajax disabled
 		createFilter();
 	});
 
@@ -92,6 +92,7 @@ $(document).ready(function() {
 	    });
 	}
 
+	//function generate href for all filter checkboxes based on current GET params and checkboxes values
 	function createFilterUrls()
 	{
 		$('.fltr-wrapper .fltr-check').each(function(){
@@ -107,6 +108,7 @@ $(document).ready(function() {
 		});
 	}
 
+	//function for fix invalid href for all urls inside Ajax view with Pjax content
 	function replaceUrls(elem)
 	{
 		elem.find('a').each(function(){
@@ -124,6 +126,8 @@ $(document).ready(function() {
 		});
 	}
 	
+
+	//return all GET params from URL as array
 	function getQueryParameters(href) {
 	    //get all GET params array from url
     	var urlParams;
@@ -133,7 +137,6 @@ $(document).ready(function() {
 		        search = /([^&=]+)=?([^&]*)/g,
 		        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
 		        query  = decodeURIComponent(href);
-
 		    urlParams = {};
 		    while (match = search.exec(query)) {
 		    	if (urlParams[decode(match[1])]) {
@@ -146,6 +149,7 @@ $(document).ready(function() {
 		return urlParams;
 	}
 
+	//return GET param by name
 	function getParameterByName(name) {
 	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
 	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
