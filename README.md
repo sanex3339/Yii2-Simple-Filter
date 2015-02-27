@@ -77,6 +77,22 @@ $filter->setFilter([
     ]
 ]);
 ```
+You can choose between Ajax or non-Ajax filtering by setting second setFilter() parameter to 'true' or 'false' values:
+```
+$filter->setFilter([
+    [
+        'property' => 'color',
+        'caption' => 'Color',
+        'values' => [
+            'Red',
+            'Green',
+            'Blue',
+            'Black'
+        ]
+    ]
+], false);
+```
+
 Then, where you want to render ajax view with filtered data, call `renderDataView()`:
 ```
 $filter->renderDataView($viewFile, $model, 1, ['testParam' => $testParam]);
