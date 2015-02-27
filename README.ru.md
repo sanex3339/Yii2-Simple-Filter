@@ -1,7 +1,7 @@
 # Simple-Yii2-Checkbox-Filter-Module
 Simple Yii2 Checkbox Filter Module
 
-Yii2 filter module v0.02
+Yii2 filter module v0.03
 
 Видео: http://www.youtube.com/watch?v=Vah2j5WzXIs
 
@@ -61,10 +61,8 @@ $query->select(['id', 'name', 'size', 'price', 'country'])->where(['country' => 
 $filter->setQuery($query);
 ```
 
-######
-Вид
-
-В основном View, необходимо вызвать метод Фильтра `setFilter()` в котором задать параметры фильтрации:
+######Вид
+В основном View необходимо вызвать метод Фильтра `setFilter()`, в котором задать параметры фильтрации:
 
 ```
 $filter->setFilter([
