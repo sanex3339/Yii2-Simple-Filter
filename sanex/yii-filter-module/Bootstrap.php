@@ -17,7 +17,7 @@ class Bootstrap implements BootstrapInterface
         // Add module URL rules.
         $app->getUrlManager()->addRules(
             [
-                'sanex-filter-ajax' => 'filter/filter/show-data-post'
+                'sanex-filter-ajax' => 'filter/filter/show-data-post-ajax',
             ]
         );
     }

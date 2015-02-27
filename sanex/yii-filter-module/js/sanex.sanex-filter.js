@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	var filter = {};
+	var json;
 
 	getCheckStateByUrlParams(); //get checkbox state from GET query
 
@@ -10,23 +11,7 @@ $(document).ready(function() {
 
     function getCheckStateByUrlParams() {
     	//get all GET params array from url
-    	var urlParams;
-		(window.onpopstate = function () {
-		    var match,
-		        pl     = /\+/g,
-		        search = /([^&=]+)=?([^&]*)/g,
-		        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
-		        query  = decodeURIComponent(window.location.search.substring(1));
-
-		    urlParams = {};
-		    while (match = search.exec(query)) {
-		    	if (urlParams[decode(match[1])]) {
-		    		urlParams[decode(match[1])] += ','+decode(match[2]);
-		    	} else {
-		    		urlParams[decode(match[1])] = decode(match[2]);
-		    	}
-		    }   
-		})();
+    	var urlParams = getQueryParameters(window.location.search.substring(1));
 		
 		delete urlParams['filter']; //delete "filter" GET param
 
@@ -79,7 +64,7 @@ $(document).ready(function() {
 			}
 		});
 
-		var json = JSON.stringify(filter);
+		json = JSON.stringify(filter);
 		sendFilter(json);
 	}
 
@@ -95,9 +80,57 @@ $(document).ready(function() {
 	       },
            dataType: 'html',
 	       success: function(data) {
-	       	   $('.fltr-data-wrapper').children().remove();
-	           $('.fltr-data-wrapper').html(data);
+	       		var wrapper = $('.fltr-data-wrapper');
+	       	    wrapper.children().remove();
+	            wrapper.html(data);
+	            replaceUrls(wrapper);
 	       }
 	    });
+	}
+
+	function replaceUrls(elem)
+	{
+		elem.find('a').each(function(){
+			var linkOldHref = $(this).attr('href');
+			var linkGetParamsArray = getQueryParameters(linkOldHref.split('/').pop().substring(1));
+			var getQuery = '?'+window.location.search.substring(1);
+			var linkGetParams = '&'+linkOldHref.split('/').pop().substring(1);
+			for (getParam in linkGetParamsArray) {
+				if (getParameterByName(getParam)) {
+					getQuery = $.query.REMOVE(getParam).toString();
+				}
+			}
+			href = getQuery+linkGetParams;
+			$(this).attr('href', href);
+		});
+	}
+	
+	function getQueryParameters(href) {
+	    //get all GET params array from url
+    	var urlParams;
+		(window.onpopstate = function () {
+		    var match,
+		        pl     = /\+/g,
+		        search = /([^&=]+)=?([^&]*)/g,
+		        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+		        query  = decodeURIComponent(href);
+
+		    urlParams = {};
+		    while (match = search.exec(query)) {
+		    	if (urlParams[decode(match[1])]) {
+		    		urlParams[decode(match[1])] += ','+decode(match[2]);
+		    	} else {
+		    		urlParams[decode(match[1])] = decode(match[2]);
+		    	}
+		    }   
+		})();
+		return urlParams;
+	}
+
+	function getParameterByName(name) {
+	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	        results = regex.exec(location.search);
+	    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 });
