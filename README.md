@@ -52,7 +52,8 @@ $query->select(['id', 'name', 'size', 'price', 'country'])->where(['country' => 
 $filter->setQuery($query);
 ```
 
-In main view, you must call `setFilter()` method contain array with filter parameters:
+In main view, you must call `setFilter()` method contain array with filter parameters.
+#####Values must be same as names of table columns which you want to filter. 
 
 ```
 $filter->setFilter([
