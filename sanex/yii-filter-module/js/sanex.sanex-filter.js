@@ -3,7 +3,6 @@ $(document).ready(function() {
 	var json;
 
 	getCheckStateByUrlParams(); //get checkbox state from GET query
-
 	if (!SanexFilterAjax)
 		createFilterUrls(); //enable url generation for filter checkboxes when ajax disabled
 
@@ -16,16 +15,12 @@ $(document).ready(function() {
     function getCheckStateByUrlParams() {
     	//get all GET params array from url
     	var urlParams = getQueryParameters(window.location.search.substring(1));
-		
 		delete urlParams['filter']; //delete "filter" GET param
-
 		//find all params and his values
-		//for each value find similar checkbox, and set class 'active' for him
 		for (params in urlParams) {
 			var category = params.split('[', 1);
 			var properties = urlParams[params];
 			var element = $('.fltr-wrapper .fltr-cat#'+category);
-			
 			element.find('.fltr-check[value="'+properties+'"]').addClass('active');
 		}
     }
@@ -49,25 +44,19 @@ $(document).ready(function() {
 		$('.fltr-wrapper .fltr-cat').each(function() {
 			var array = [];
 			var category = $(this).attr('id');
-			
 			//find all elements inside category
 			$(this).find('.fltr-check.active').each(function(index) {
 				array[index] = $(this).attr('value'); //for each found element put his value into array
 			});
-
 			var property = array.join(); //create string from array
-
 			//Делаем новый объект, с ключом - имя категории, значение - другой элемент... 
 			//...с ключом properties, значение - сформированная строка
 			if (property.length > 0) {
-				filter[category] = {
-					properties: property
-				};
+				filter[category] = {properties: property};
 			} else {
 				delete filter[category]; //delete all empty values from filter object
 			}
 		});
-
 		json = JSON.stringify(filter);
 		sendFilter(json);
 	}
@@ -78,10 +67,7 @@ $(document).ready(function() {
 		$.ajax({
 	       url: '/sanex-filter-ajax/',
 	       type: 'POST',
-	       data: {
-	       		_csrf: yii.getCsrfToken(),
-	       		filter: filter		
-	       },
+	       data: {_csrf: yii.getCsrfToken(), filter: filter},
            dataType: 'html',
 	       success: function(data) {
 	       		var wrapper = $('.fltr-data-wrapper');
@@ -126,10 +112,8 @@ $(document).ready(function() {
 		});
 	}
 	
-
 	//return all GET params from URL as array
 	function getQueryParameters(href) {
-	    //get all GET params array from url
     	var urlParams;
 		(window.onpopstate = function () {
 		    var match,

@@ -28,10 +28,10 @@ class SanexFilter extends \yii\base\Module
         $this->session->open();
     }
 
-    public function setFilter($filter = [], $ajax)
+    public function setFilter($filter = [], $ajax = true)
     {
         $this->filter = $filter;
-        $this->ajax = $ajax === true ? true : false;
+        $this->ajax = $ajax === true ? 'true' : 'false';
 
         return $this->runAction('filter/set-filter');
     }
