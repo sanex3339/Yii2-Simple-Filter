@@ -53,7 +53,7 @@ $filter->setQuery($query);
 ```
 
 In main view, you must call `setFilter()` method contain array with filter parameters.
-#####Values must be same as names of table columns which you want to filter. 
+#####`property` must be same as names of table columns which you want to filter, and `values` must be same as this columns data. 
 
 ```
 $filter->setFilter([
