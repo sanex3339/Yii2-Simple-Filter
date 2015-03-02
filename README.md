@@ -5,7 +5,7 @@ Yii2 filter module v0.5
 
 Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
 
-Installation (Video http://www.youtube.com/watch?v=J-S4L85-F6M):
+#####Installation (Video http://www.youtube.com/watch?v=J-S4L85-F6M):
 Put `sanex` folder to vendor folder, then add to 
 `vendor/yiisoft/extensions.php`
 following code:
@@ -29,7 +29,9 @@ array (
     ],
 ],
 ```
-How to use?
+#####How to use?
+
+#####Controller:
 In controller, which has view (main view), where you want show data with filter, set 3 parameters:
 ```
 use sanex\filter\Module;
@@ -65,6 +67,9 @@ If you want to use custom pagination with this filter, you can get `offset` from
 
 In main view, you must call `setFilter()` method contain array with filter parameters.
 #####`property` must be same as names of table columns which you want to filter, and `values` must be same as this columns data. 
+
+
+#####Main View
 
 ```
 $filter->setFilter([
