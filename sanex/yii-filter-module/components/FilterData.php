@@ -9,16 +9,16 @@ abstract class FilterData
 {
 	//init properties
 	protected $filter,
-			  $model,
-			  $query,
-			  $setDataProvider;
+			$model,
+			$query,
+			$setDataProvider;
 
 	//class properties
 	protected $data,
-			  $getParams = [],
-		      $limit,
-		      $offset,
-			  $where = [];
+			$getParams = [],
+			$limit,
+			$offset,
+			$where = [];
 
 	//default limit value for custom or ActiveDataProvider pagination
 	const QUERY_LIMIT = 50;		
@@ -31,13 +31,13 @@ abstract class FilterData
 			} else {
 				throw new Exception("Invalid filter object property", 1);
 			}
-	    }
+		}
 
-	    if (!$this->model) 
-	    	throw new Exception("Missing model property", 1);
+		if (!$this->model) 
+			throw new Exception("Missing model property", 1);
 
-	    //set data
-	    $this->setWhereArray()->setQuery()->setData();
+		//set data
+		$this->setWhereArray()->setQuery()->setData();
 	}
 
 	public function getData()
@@ -54,7 +54,13 @@ abstract class FilterData
            $this->where = array_merge_recursive($query->where, $this->where); 
         
         $this->limit = $query->limit ? $query->limit : self::QUERY_LIMIT;
-        $this->offset = $this->setDataProvider ? null : (Yii::$app->request->get('page') <= 1 ? 0 : (Yii::$app->request->get('page')-1) * $this->limit);
+        $this->offset = $this->setDataProvider ? 
+        				null : 
+        					$query->offset ? 
+        					$query->offset :
+	        					(Yii::$app->request->get('page') <= 1 
+	        					? 0 
+	        					: (Yii::$app->request->get('page')-1) * $this->limit);			
         
         $this->query = $query->where($this->where)->limit($this->limit)->offset($this->offset);
         return $this;
@@ -64,7 +70,6 @@ abstract class FilterData
 	{
 		$this->data = $this->setDataProvider ? new ActiveDataProvider([
 			'query' => $this->query, 
-			'sort'=> ['defaultOrder' => ['id'=>SORT_ASC]], 
 			'pagination' => ['pageSize' => $this->limit],
 		]) : $this->query->all();
 	}
