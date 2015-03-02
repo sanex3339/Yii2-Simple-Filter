@@ -1,7 +1,7 @@
 # Simple-Yii2-Checkbox-Filter-Module
 Simple Yii2 Checkbox Filter Module
 
-Yii2 filter module v0.03
+Yii2 filter module v0.5
 
 Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
 
