@@ -22,5 +22,5 @@ class FilterDataGetRequest extends FilterData
         }
 
         return $this;
-	}
+    }
 }	

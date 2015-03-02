@@ -65,7 +65,7 @@ $(document).ready(function() {
 	//success data - html data of ajax view
 	function sendFilter(filter) {
 		$.ajax({
-	       url: '/sanex-filter-ajax/',
+	       url: sanexFilterAjaxUrl,
 	       type: 'POST',
 	       data: {_csrf: yii.getCsrfToken(), filter: filter},
            dataType: 'html',
@@ -101,7 +101,7 @@ $(document).ready(function() {
 			var linkOldHref = $(this).attr('href');
 			var linkGetParamsArray = getQueryParameters(linkOldHref.split('/').pop().substring(1));
 			var getQuery = '?'+window.location.search.substring(1);
-			var linkGetParams = '&'+linkOldHref.split('/').pop().substring(1);
+			var linkGetParams = '&'+linkOldHref.split('?').pop();
 			for (getParam in linkGetParamsArray) {
 				if (getParameterByName(getParam)) {
 					getQuery = $.query.REMOVE(getParam).toString();

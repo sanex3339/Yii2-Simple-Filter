@@ -42,8 +42,11 @@ class SanexFilter extends \yii\base\Module
         $this->model = $this->tempSessionData['model'] = $model;
         $this->setDataProvider = $this->tempSessionData['setDataProvider'] = $setDataProvider;
         $this->viewParams = $this->tempSessionData['viewParams'] = $viewParams;
+        
         //set url for correct work of all links in view that rendered by showDataGet controller
-        $this->urlForLinks = $this->tempSessionData['urlForLinks'] = Url::to(['/'.Yii::$app->controller->getRoute()]);
+        $url = str_replace("index.php", "", Url::to(['/'.Yii::$app->controller->getRoute()]));
+        $this->urlForLinks = $this->tempSessionData['urlForLinks'] = $url;
+        
         $this->session['SanexFilter'] = $this->tempSessionData;
 
         return $this->runAction('filter/show-data-get');

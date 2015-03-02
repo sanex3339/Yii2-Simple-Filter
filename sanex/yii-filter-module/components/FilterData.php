@@ -58,11 +58,12 @@ abstract class FilterData
 		$this->limit = $query->limit ? $query->limit : self::QUERY_LIMIT;
 		$this->offset = $this->setDataProvider ? null : 
 							($query->offset ? $query->offset :
-		    					(Yii::$app->request->get('page') <= 1 ? 0 : 
-		    						(Yii::$app->request->get('page') - 1) * $this->limit));				
+								(Yii::$app->request->get('page') <= 1 ? 0 : 
+									(Yii::$app->request->get('page') - 1) * $this->limit));				
 		$this->orderBy = $this->setDataProvider ? null : ($query->orderBy ? $query->orderBy : null); 
 		$this->sort = $query->orderBy; //set $this->sort property for dataProvider sorting													
 
+		//build final query
 		$this->query = $query->where($this->where)->limit($this->limit)->offset($this->offset)->orderBy($this->orderBy);
 		return $this;
 	}
