@@ -29,6 +29,11 @@ array (
     ],
 ],
 ```
+
+Next, add `'enablePrettyUrl' => true` to the `urlManager` in config file.
+######Module not working with `'enablePrettyUrl' => false`!
+
+
 #####How to use?
 
 #####Controller:
