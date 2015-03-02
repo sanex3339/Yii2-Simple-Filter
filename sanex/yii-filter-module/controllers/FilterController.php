@@ -2,8 +2,9 @@
 
 namespace sanex\filter\controllers;
 
+use sanex\filter\components\FilterDataGetRequest;
+use sanex\filter\components\FilterDataPostRequest;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Session;
@@ -28,34 +29,17 @@ class FilterController extends Controller
      */
     public function actionShowDataGet()
     {
-        $model = $this->module->model;
-        $attributes = $model->attributes();
-        $where = $getParams = [];
-
-        if (Yii::$app->request->get('filter')) {
-            $get = Yii::$app->request->get();
-            foreach ($get as $category => $property) {
-                if (!is_array($property))
-                    $property = array($property);
-                if(array_search($category, $attributes)) {
-                    $where[$category] = $property;
-                } else {
-                    $getParams[$category] = $property;
-                }       
-            }
-        } 
-
-        $query = $this->module->query ? clone $this->module->query : $model->find();
-        if ($query->where)
-           $where = array_merge_recursive($query->where, $where); 
-        $query->where($where);
-
-        $data = $this->module->setDataProvider ? new ActiveDataProvider(['query' => $query, 'pagination' => ['pageSize' => 50]]) : $query->all();
+        $filterData = new FilterDataGetRequest([
+            'model' => $this->module->model,
+            'query' => $this->module->query,
+            'setDataProvider' => $this->module->setDataProvider,
+        ]);
+        $data = $filterData->getData();
 
         //set dynamic route for this action
         $this->setRoute($this->module->urlForLinks, 'get');
-
         $this->module->viewParams['sanexFilterData'] = $data;
+
         return $this->renderPartial('filter-data-wrapper', [
             'viewFile' => $this->module->viewFile, 'viewParams' => $this->module->viewParams
         ]);
@@ -75,31 +59,21 @@ class FilterController extends Controller
     {   
         if (Yii::$app->request->post('filter') && Yii::$app->request->getIsAjax()) {
             $parameters = $this->module->session['SanexFilter'];
-            $model = $parameters['model'];
-            $attributes = $model->attributes();
-            $where = $getParams = [];
-            
-            $filter = json_decode($_POST['filter'], true);
-            foreach ($filter as $name => $properties) {            
-                if(array_search($name, $attributes)) {
-                    $where[$name] = explode(',', $properties['properties']); 
-                } else {
-                    $getParams[$name] = explode(',', $properties['properties']);
-                }       
-            }           
 
-            $query = isset($parameters['query']) ? clone $parameters['query'] : $model->find();
-            if ($query->where)
-                $where = array_merge_recursive($query->where, $where);
-            $query->where($where);
-
-            $data = $parameters['setDataProvider'] ? new ActiveDataProvider(['query' => $query, 'pagination' => ['pageSize' => 50]]) : $query->all();
+            $filterData = new FilterDataPostRequest([
+                'filter' => json_decode($_POST['filter'], true),
+                'model' => $parameters['model'],
+                'query' => isset($parameters['query']) ? $parameters['query'] : null,
+                'setDataProvider' => $parameters['setDataProvider'],
+            ]);
+            $data = $filterData->getData();
 
             //set dynamic route for this action
             $this->setRoute($parameters['urlForLinks'], 'post');
 
             $viewParams = $parameters['viewParams'];
             $viewParams['sanexFilterData'] = $data;
+            
             return $this->renderPartial('filter-data-wrapper', [
                 'viewFile' => $parameters['viewFile'], 'viewParams' => $viewParams
             ]);

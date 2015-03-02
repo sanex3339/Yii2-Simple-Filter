@@ -36,7 +36,7 @@ class SanexFilter extends \yii\base\Module
         return $this->runAction('filter/set-filter');
     }
 
-    public function renderDataView($viewFile, $model, $setDataProvider = false, $viewParams = [])
+    public function renderDataView($viewFile, \yii\db\ActiveRecord $model, $setDataProvider = false, $viewParams = [])
     {
         $this->viewFile = $this->tempSessionData['viewFile'] = $viewFile;
         $this->model = $this->tempSessionData['model'] = $model;
@@ -49,7 +49,7 @@ class SanexFilter extends \yii\base\Module
         return $this->runAction('filter/show-data-get');
     }
 
-    public function setQuery($query)
+    public function setQuery(\yii\db\ActiveQuery $query)
     {
         $this->query = $this->tempSessionData['query'] = $query;
         $this->session['SanexFilter'] = $this->tempSessionData; 

@@ -52,6 +52,17 @@ $query->select(['id', 'name', 'size', 'price', 'country'])->where(['country' => 
 $filter->setQuery($query);
 ```
 
+Method `limit()` of \yii\db\ActiveQuery object can set parameter `'pagination' => ['pageSize' => $this->limit]`, of ActiveDatapProvider object.
+
+```
+$query = new \yii\db\ActiveQuery($model);
+$query->limit(25); 
+$filter->setQuery($query);
+```
+If `limit()` method not set, then `limit` for each query will set to default value - 50 rows per page.
+
+If you want to use custom pagination with this filter, you can get `offset` from GET-paremeter `page`. Need to know, what for `page` values `0` and `1`, `offset` value will `0`, for all other values - will calculated by formula `(page - 1) * limit`.
+
 In main view, you must call `setFilter()` method contain array with filter parameters.
 #####`property` must be same as names of table columns which you want to filter, and `values` must be same as this columns data. 
 
