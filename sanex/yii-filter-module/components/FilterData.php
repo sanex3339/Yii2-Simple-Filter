@@ -18,6 +18,8 @@ abstract class FilterData
 			$getParams = [],
 			$limit,
 			$offset,
+			$orderBy,
+			$sort,
 			$where = [];
 
 	//default limit value for custom or ActiveDataProvider pagination
@@ -50,27 +52,32 @@ abstract class FilterData
 	private function setQuery()
 	{
 		$query = $this->query ? clone $this->query : $this->model->find();
-        if ($query->where)
-           $this->where = array_merge_recursive($query->where, $this->where); 
-        
-        $this->limit = $query->limit ? $query->limit : self::QUERY_LIMIT;
-        $this->offset = $this->setDataProvider ? 
-        				null : 
-        					$query->offset ? 
-        					$query->offset :
-	        					(Yii::$app->request->get('page') <= 1 
-	        					? 0 
-	        					: (Yii::$app->request->get('page')-1) * $this->limit);			
-        
-        $this->query = $query->where($this->where)->limit($this->limit)->offset($this->offset);
-        return $this;
+		if ($query->where)
+		   $this->where = array_merge_recursive($query->where, $this->where); 
+
+		$this->limit = $query->limit ? $query->limit : self::QUERY_LIMIT;
+		$this->offset = $this->setDataProvider ? null : 
+							($query->offset ? $query->offset :
+		    					(Yii::$app->request->get('page') <= 1 ? 0 : 
+		    						(Yii::$app->request->get('page') - 1) * $this->limit));				
+		$this->orderBy = $this->setDataProvider ? null : ($query->orderBy ? $query->orderBy : null); 
+		$this->sort = $query->orderBy; //set $this->sort property for dataProvider sorting													
+
+		$this->query = $query->where($this->where)->limit($this->limit)->offset($this->offset)->orderBy($this->orderBy);
+		return $this;
 	}
 
 	private function setData()
 	{
-		$this->data = $this->setDataProvider ? new ActiveDataProvider([
-			'query' => $this->query, 
-			'pagination' => ['pageSize' => $this->limit],
-		]) : $this->query->all();
+		//set properties array for dataProvider
+		$dpProps = ['query' => $this->query, 'pagination' => ['pageSize' => $this->limit]];
+
+		//set dataProvider sorting based on ActiveQuery orderBy() method.
+		//sorting based only on first orderBy() parameter
+		if ($this->sort)
+			$dpProps['sort'] = ['defaultOrder' => [array_keys($this->sort)[0] => SORT_ASC]];
+
+		//set data
+		$this->data = $this->setDataProvider ? new ActiveDataProvider($dpProps) : $this->query->all();
 	}
 }	

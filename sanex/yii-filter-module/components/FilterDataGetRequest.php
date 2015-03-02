@@ -6,9 +6,9 @@ use Yii;
 
 class FilterDataGetRequest extends FilterData
 {
-	protected function setWhereArray()
-	{
-		if (Yii::$app->request->get('filter')) {
+    protected function setWhereArray()
+    {
+        if (Yii::$app->request->get('filter')) {
             $get = Yii::$app->request->get();
             foreach ($get as $category => $property) {
                 if (!is_array($property))

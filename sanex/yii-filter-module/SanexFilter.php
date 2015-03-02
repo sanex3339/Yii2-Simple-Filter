@@ -31,7 +31,7 @@ class SanexFilter extends \yii\base\Module
     public function setFilter($filter = [], $ajax = true)
     {
         $this->filter = $filter;
-        $this->ajax = $ajax === true ? 'true' : 'false';
+        $this->ajax = $ajax == true ? 'true' : 'false';
 
         return $this->runAction('filter/set-filter');
     }

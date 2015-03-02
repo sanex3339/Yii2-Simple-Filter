@@ -41,6 +41,7 @@
 	margin: 0px 20px 0px 0px;
 	cursor: pointer;
 	color: #000;
+	text-decoration: none;
 }
 
 .fltr-check:hover,
