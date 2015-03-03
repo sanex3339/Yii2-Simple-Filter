@@ -132,4 +132,4 @@ $filter->renderDataView($viewFile, $model, 1, ['testParam' => $testParam]);
 In ajax view, you can get filtered data (model or dataProvider) through `$sanexFilterData` variable.
 #####Note! Module pass to ajax view only data! You must create in that ajax view `<table></table>` or use GridView widget to show data, same way as with all other Yii2 models!
 
-####Note! For all custom inside Ajax View urls, which not used for custom sorting or custom pagination, necessarily add to them `sfCustomUrl` class!!!! To all urls without that class in ajax view appended GET-parameters which are necessary for proper work sorting and pagination (gridView and custom). 
+####Note! For all urls inside Ajax View, which not used for custom sorting or custom pagination, necessarily add to them `sfCustomUrl` class!!!! To all urls without that class in ajax view appended GET-parameters which are necessary for proper work sorting and pagination (gridView and custom). 
