@@ -1,12 +1,14 @@
 $(document).ready(function() {
 	var filter = {};
 	var json;
+	var oldGetParams;
 
 	getCheckStateByUrlParams(); //get checkbox state from GET query
 	if (!SanexFilterAjax)
 		createFilterUrls(); //enable url generation for filter checkboxes when ajax disabled
 
 	$('.fltr-wrapper .fltr-check').click(function() {
+		oldGetParams = window.location.search.substring(1);
 		if (SanexFilterAjax)
 			createUrl($(this)); //disable history url generation when ajax disabled
 		createFilter();
@@ -29,11 +31,13 @@ $(document).ready(function() {
     function createUrl(elem) {
     	var category = elem.parent().attr('id');
 		var url;
+		$.query.parseNew(location.search, location.hash.split("?").length > 1 ? location.hash.split("?")[1] : "");
 		if (!elem.hasClass('active')) {
 			url = $.query.SET('filter', '1').SET(category+'[]', elem.attr('value')).toString();
 			elem.addClass('active');
 		} else {
 			url = $.query.REMOVE(category, elem.attr('value'));
+
 			elem.removeClass('active');
 		}
 		window.history.pushState('', '', url);
@@ -65,16 +69,16 @@ $(document).ready(function() {
 	//success data - html data of ajax view
 	function sendFilter(filter) {
 		$.ajax({
-	       url: sanexFilterAjaxUrl,
-	       type: 'POST',
-	       data: {_csrf: yii.getCsrfToken(), filter: filter},
-           dataType: 'html',
-	       success: function(data) {
-	       		var wrapper = $('.fltr-data-wrapper');
-	       	    wrapper.children().remove();
-	            wrapper.html(data);
-	            replaceUrls(wrapper);
-	       }
+			url: sanexFilterAjaxUrl+'?'+oldGetParams,
+			type: 'POST',
+			data: {_csrf: yii.getCsrfToken(), filter: filter},
+			dataType: 'html',
+			success: function(data) {
+					var wrapper = $('.fltr-data-wrapper');
+				    wrapper.children().remove();
+			    wrapper.html(data);
+			    replaceUrls(wrapper);
+			}
 	    });
 	}
 

@@ -235,7 +235,6 @@ new function(settings) {
         return queryString.join("");
       }
     };
-    
     return new queryObject(location.search, location.hash);
   };
 }(jQuery.query || {}); // Pass in jQuery.query as settings object
