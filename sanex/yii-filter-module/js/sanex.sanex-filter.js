@@ -35,12 +35,14 @@ $(document).ready(function() {
 		if (!elem.hasClass('active')) {
 			url = $.query.SET('filter', '1').SET(category+'[]', elem.attr('value')).toString();
 			elem.addClass('active');
+			window.history.pushState('', '', url);
 		} else {
 			url = $.query.REMOVE(category, elem.attr('value'));
-
 			elem.removeClass('active');
+			window.history.pushState('', '', url);
+			oldGetParams = window.location.search.substring(1);
 		}
-		window.history.pushState('', '', url);
+		
     }
 
     //create json array with filter params
@@ -112,6 +114,7 @@ $(document).ready(function() {
 				}
 			}
 			href = getQuery+linkGetParams;
+			href = href.replace('&','?');
 			$(this).attr('href', href);
 		});
 	}
