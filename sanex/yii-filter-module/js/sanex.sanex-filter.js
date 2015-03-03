@@ -103,7 +103,7 @@ $(document).ready(function() {
 	//function for fix invalid href for all urls inside Ajax view with Pjax content
 	function replaceUrls(elem)
 	{
-		elem.find('a:not(".grCustomUrl")').each(function(){
+		elem.find('a:not(".sfCustomUrl")').each(function(){
 			var linkOldHref = $(this).attr('href');
 			var linkGetParamsArray = getQueryParameters(linkOldHref.split('/').pop().substring(1));
 			var getQuery = '?'+window.location.search.substring(1);
