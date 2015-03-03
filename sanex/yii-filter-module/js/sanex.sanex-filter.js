@@ -114,7 +114,8 @@ $(document).ready(function() {
 				}
 			}
 			href = getQuery+linkGetParams;
-			href = href.replace('&','?');
+			if (href.charAt(0) == '&') 
+				href = href.replace('&','?');
 			$(this).attr('href', href);
 		});
 	}
