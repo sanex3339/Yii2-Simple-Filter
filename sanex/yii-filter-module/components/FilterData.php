@@ -2,25 +2,25 @@
 namespace sanex\filter\components;
 
 use Yii;
-use yii\base\Exception;
+use yii\base\UnknownPropertyException;
 use yii\data\ActiveDataProvider;
 
 abstract class FilterData
 {
 	//init properties
-	protected $filter,
-			$model,
-			$query,
-			$setDataProvider;
+	protected   $filter,
+				$model,
+				$query,
+				$useDataProvider;
 
 	//class properties
-	protected $data,
-			$getParams = [],
-			$limit,
-			$offset,
-			$orderBy,
-			$sort,
-			$where = [];
+	protected   $data,
+				$getParams = [],
+				$limit,
+				$offset,
+				$orderBy,
+				$sort,
+				$where = [];
 
 	//default limit value for custom or ActiveDataProvider pagination
 	const QUERY_LIMIT = 50;		
@@ -31,12 +31,12 @@ abstract class FilterData
 			if (property_exists($this, $key)) {
 				$this->{$key} = $value;	
 			} else {
-				throw new Exception("Invalid filter object property", 1);
+				throw new UnknownPropertyException("Invalid filter object property", 1);
 			}
 		}
 
 		if (!$this->model) 
-			throw new Exception("Missing model property", 1);
+			throw new UnknownPropertyException("Missing model property", 1);
 
 		//set data
 		$this->setWhereArray()->setQuery()->setData();
@@ -56,11 +56,12 @@ abstract class FilterData
 		   $this->where = array_merge_recursive($query->where, $this->where); 
 
 		$this->limit = $query->limit ? $query->limit : self::QUERY_LIMIT;
-		$this->offset = $this->setDataProvider ? null : 
+		//kittens here
+		$this->offset = $this->useDataProvider ? null : 
 							($query->offset ? $query->offset :
 								(Yii::$app->request->get('page') <= 1 ? 0 : 
 									(Yii::$app->request->get('page') - 1) * $this->limit));				
-		$this->orderBy = $this->setDataProvider ? null : ($query->orderBy ? $query->orderBy : null); 
+		$this->orderBy = $this->useDataProvider ? null : ($query->orderBy ? $query->orderBy : null); 
 		$this->sort = $query->orderBy; //set $this->sort property for dataProvider sorting													
 
 		//build final query
@@ -79,6 +80,6 @@ abstract class FilterData
 			$dpProps['sort'] = ['defaultOrder' => [array_keys($this->sort)[0] => SORT_ASC]];
 
 		//set data
-		$this->data = $this->setDataProvider ? new ActiveDataProvider($dpProps) : $this->query->all();
+		$this->data = $this->useDataProvider ? new ActiveDataProvider($dpProps) : $this->query->all();
 	}
 }	

@@ -15,10 +15,6 @@ class FilterController extends Controller
     {
 
         $filter = $this->module->filter;
-        if (!$filter)
-            throw new NotFoundHttpException("Invalid or empty filter properties", 1);
-        if (!is_array($filter))
-            throw new NotFoundHttpException("Filter properties must be as array", 1);
 
         //make css class for checkbox
         foreach ($filter as $key => $property) {
@@ -30,7 +26,10 @@ class FilterController extends Controller
             }
         }
 
-        return $this->renderPartial('filter-list', ['filter' => $filter, 'ajax' => $this->module->ajax]);
+        //set value for js ajax variable
+        $ajax = $this->module->ajax == true ? 'true' : 'false';
+
+        return $this->renderPartial('filter-list', ['filter' => $filter, 'ajax' => $ajax]);
     }
 
     /**
@@ -43,16 +42,17 @@ class FilterController extends Controller
         $filterData = new FilterDataGetRequest([
             'model' => $this->module->model,
             'query' => $this->module->query,
-            'setDataProvider' => $this->module->setDataProvider,
+            'useDataProvider' => $this->module->useDataProvider,
         ]);
         $data = $filterData->getData();
 
         //set dynamic route for this action
-        $this->setRoute($this->module->urlForLinks, 'get');
-        $this->module->viewParams['sanexFilterData'] = $data;
+        $this->setRoute($this->module->controllerRoute, 'get');
+
+        $this->module->ajaxViewParams['sanexFilterData'] = $data;
 
         return $this->renderPartial('filter-data-wrapper', [
-            'viewFile' => $this->module->viewFile, 'viewParams' => $this->module->viewParams
+            'viewFile' => $this->module->ajaxViewFile, 'viewParams' => $this->module->ajaxViewParams
         ]);
     }
 
@@ -72,21 +72,21 @@ class FilterController extends Controller
             $parameters = $this->module->session['SanexFilter'];
 
             $filterData = new FilterDataPostRequest([
-                'filter' => json_decode($_POST['filter'], true),
+                'filter' => json_decode(Yii::$app->request->post('filter'), true),
                 'model' => $parameters['model'],
                 'query' => isset($parameters['query']) ? $parameters['query'] : null,
-                'setDataProvider' => $parameters['setDataProvider'],
+                'useDataProvider' => $parameters['useDataProvider'],
             ]);
             $data = $filterData->getData();
 
             //set dynamic route for this action
-            $this->setRoute($parameters['urlForLinks'], 'post');
+            $this->setRoute($parameters['controllerRoute'], 'post');
 
-            $viewParams = $parameters['viewParams'];
-            $viewParams['sanexFilterData'] = $data;
+            $ajaxViewParams = $parameters['ajaxViewParams'];
+            $ajaxViewParams['sanexFilterData'] = $data;
             
             return $this->renderPartial('filter-data-wrapper', [
-                'viewFile' => $parameters['viewFile'], 'viewParams' => $viewParams
+                'viewFile' => $parameters['ajaxViewFile'], 'viewParams' => $ajaxViewParams
             ]);
         } else {
             throw new NotFoundHttpException("Page not found.", 1);

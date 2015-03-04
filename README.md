@@ -1,11 +1,12 @@
 # Simple-Yii2-Checkbox-Filter-Module
 Simple Yii2 Checkbox Filter Module
 
-Yii2 filter module v0.5.5
+Yii2 filter module v0.6
+#####Not compatible with older versions, because methods names were changed! 
 
 Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
 
-#####Installation (Video http://www.youtube.com/watch?v=J-S4L85-F6M):
+###Installation (Video http://www.youtube.com/watch?v=J-S4L85-F6M):
 Put `sanex` folder to vendor folder, then add to 
 `vendor/yiisoft/extensions.php`
 following code:
@@ -34,29 +35,40 @@ Next, add `'enablePrettyUrl' => true` to the `urlManager` in config file.
 ######Module not working with `'enablePrettyUrl' => false`!
 
 
-#####How to use?
+###How to use?
 
-#####Controller:
+####Controller:
 In controller, which has view (main view), where you want show data with filter, set 3 parameters:
 ```
 use sanex\filter\Module;
 
 ...
 
-$model = new Catalog; // - model, which data you want to filter
-$viewFile = '@sanex/catalog/views/catalog/catalog-ajax'; // - alias (or path) to ajax view, where you want to show data
-$filter = Yii::$app->getModule('filter'); // - filter object
+$model = new Catalog;
+$ajaxViewFile = '@sanex/catalog/views/catalog/catalog-ajax';
+$filter = Yii::$app->getModule('filter');
+$filter->setParams([
+    'ajax' => true,
+    'model' => $model,
+    'query' => $query,
+    'useDataProvider' => true,
+]);
 ```
 
-`$viewFile` - ajax view (not main view!!!). You must create that view file before continue.
+`$ajaxViewFile` - alias (or path) to ajax view, where you want to show data. You must create that view file before continue.
+
+`setParams()` properties:
+`model` - model, which data need to filter;
+`ajax` - (optional, if not set - `true`) you can choose between Ajax or non-Ajax filtering by setting this parameter to boolean `true` or `false` values;
+`query` - (optional) - \yii\db\ActiveQuery object, see below;
+`useDataProvider` - (optional, if not set - `false`) if (bool) true - return data in Ajax View as dataProvider, if (bool) false or not set - return data as model;
 
 As default, result query with filter looks like `SELECT COUNT(*) FROM 'catalog' WHERE 'color' IN ('Green', 'Red')`
-If you want create custom query with filter you must call setQuery() method in controller with `\yii\db\ActiveQuery` object as method parameter, that contain query parameters.
+If you want create custom query with filter you must set `query` parameter in `setParams()` method with `\yii\db\ActiveQuery` object as method parameter, that contain query parameters.
 
 ```
 $query = new \yii\db\ActiveQuery($model);
 $query->select(['id', 'name', 'size', 'price', 'country'])->where(['country' => 'Canada'])->orderBy(['price' => SORT_ASC]); 
-$filter->setQuery($query);
 ```
 
 Method `limit()` of \yii\db\ActiveQuery object can set parameter `'pagination' => ['pageSize' => $this->limit]`, of ActiveDatapProvider object.
@@ -64,17 +76,16 @@ Method `limit()` of \yii\db\ActiveQuery object can set parameter `'pagination' =
 ```
 $query = new \yii\db\ActiveQuery($model);
 $query->limit(25); 
-$filter->setQuery($query);
 ```
 If `limit()` method not set, then `limit` for each query will set to default value - 50 rows per page.
 
 If you want to use custom pagination with this filter, you can get `offset` from GET-paremeter `page`. Need to know, what for `page` values `0` and `1`, `offset` value will `0`, for all other values - will calculated by formula `(page - 1) * limit`.
 
 In main view, you must call `setFilter()` method contain array with filter parameters.
-#####`property` must be same as names of table columns which you want to filter, and `values` must be same as this columns data. 
+######Note! `property` must be same as names of table columns which you want to filter, and `values` must be same as this columns data. 
 
 
-#####Main View
+####Main View
 
 ```
 $filter->setFilter([
@@ -101,21 +112,6 @@ $filter->setFilter([
 ]);
 ```
 
-You can choose between Ajax or non-Ajax filtering by setting second setFilter() parameter to 'true' or 'false' values:
-```
-$filter->setFilter([
-    [
-        'property' => 'color',
-        'caption' => 'Color',
-        'values' => [
-            'Red',
-            'Green',
-            'Blue',
-            'Black'
-        ]
-    ]
-], false);
-```
 You can set additional class or classes to each filters group by setting `class` property. This filter has two default style for checkbox: `horizontal` and `vertical` class for vertical checkboxes placement. If `class` property not set, used `horizontal` class as default.
 You can set `class` value as string:
 `'class' => 'horizontal additional class'` 
@@ -123,21 +119,18 @@ or as array:
 `'class' => ['vertical', 'additionalClass']`
 
 
-Then, where you want to render ajax view with filtered data, call `renderDataView()`:
+Then, where you want to render ajax view with filtered data, call `renderAjaxView()` method:
 ```
-$filter->renderDataView($viewFile, $model, 1, ['testParam' => $testParam]);
+$filter->renderAjaxView($ajaxViewFile, ['testParam' => $testParam]);
 ```
-`renderDataView($viewFile, $model, $setDataProvider = false, $viewParams = [])`
+`$ajaxViewFile` - Ajax View file;
 
-`$viewFile` - ajax view file;
+`(array)$ajaxViewParams` - (optional) parameters, that will be send to ajax view.
 
-`$model` - model;
 
-`(bool)$setDataProvider` - if true - return data as dataProvider, if false or not set - return data as model;
-
-`(array)$viewParams` - parameters, that will be send to ajax view.
-
+####Ajax View
 In ajax view, you can get filtered data (model or dataProvider) through `$sanexFilterData` variable.
-#####Note! Module pass to ajax view only data! You must create in that ajax view `<table></table>` or use GridView widget to show data, same way as with all other Yii2 models!
 
-####Note! For all urls inside Ajax View, which not used for custom sorting or custom pagination, necessarily add to them `sfCustomUrl` class!!!! To all urls without that class in ajax view appended GET-parameters which are necessary for proper work sorting and pagination (gridView and custom). 
+######Note! Module pass to ajax view only data! You must create in that ajax view `<table></table>` or use GridView widget to show data, same way as with all other Yii2 models!
+
+######Note! For all urls inside Ajax View, which not used for custom sorting or custom pagination, necessarily add to them `sfCustomUrl` class!!!! To all urls without that class in ajax view appended GET-parameters which are necessary for proper work sorting and pagination (gridView and custom). 
