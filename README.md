@@ -6,7 +6,7 @@ Yii2 filter module v0.6
 
 Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
 
-###Installation (Video http://www.youtube.com/watch?v=J-S4L85-F6M):
+###Installation:
 Put `sanex` folder to vendor folder, then add to 
 `vendor/yiisoft/extensions.php`
 following code:

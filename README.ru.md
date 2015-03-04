@@ -13,7 +13,7 @@ Yii2 filter module v0.6
 
 
 
-####Установка (Видео http://www.youtube.com/watch?v=J-S4L85-F6M):
+####Установка:
 Поместите папку `sanex` в директорию `vendor`, затем добавьте в файл `vendor/yiisoft/extensions.php` следующие строки:
 ```
 'sanex/yii-filter-module' => 
