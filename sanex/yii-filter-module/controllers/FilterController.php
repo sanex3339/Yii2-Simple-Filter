@@ -13,7 +13,19 @@ class FilterController extends Controller
 {
     public function actionSetFilter()
     {
+
         $filter = $this->module->filter;
+
+        //make css class for checkbox
+        foreach ($filter as $key => $property) {
+            if (isset($property['class'])) {
+                if (is_array($property['class']))
+                    $filter[$key]['class'] = implode(' ', $property['class']);
+            } else {
+                $filter[$key]['class'] = '';
+            }
+        }
+
         if (!$filter)
             throw new NotFoundHttpException("Invalid or empty filter properties", 1);
         if (!is_array($filter))

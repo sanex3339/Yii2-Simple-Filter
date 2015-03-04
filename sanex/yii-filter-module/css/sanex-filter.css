@@ -29,7 +29,7 @@
 	cursor: pointer;
 }
 
-.fltr-check
+.fltr-check, .fltr-check.horizontal
 {
 	background: url(../img/sanex-filter-checkbox.png) no-repeat;
 	padding: 0px 0px 0px 18px;
@@ -42,6 +42,13 @@
 	cursor: pointer;
 	color: #000;
 	text-decoration: none;
+}
+
+.fltr-check.vertical
+{
+	display: block;
+	float: none;
+	margin-bottom: 10px;
 }
 
 .fltr-check:hover,
