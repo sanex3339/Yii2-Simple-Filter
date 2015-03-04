@@ -15,6 +15,10 @@ class FilterController extends Controller
     {
 
         $filter = $this->module->filter;
+        if (!$filter)
+            throw new NotFoundHttpException("Invalid or empty filter properties", 1);
+        if (!is_array($filter))
+            throw new NotFoundHttpException("Filter properties must be as array", 1);
 
         //make css class for checkbox
         foreach ($filter as $key => $property) {
@@ -25,11 +29,6 @@ class FilterController extends Controller
                 $filter[$key]['class'] = '';
             }
         }
-
-        if (!$filter)
-            throw new NotFoundHttpException("Invalid or empty filter properties", 1);
-        if (!is_array($filter))
-            throw new NotFoundHttpException("Filter properties must be as array", 1);
 
         return $this->renderPartial('filter-list', ['filter' => $filter, 'ajax' => $this->module->ajax]);
     }

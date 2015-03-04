@@ -1,7 +1,7 @@
 # Simple-Yii2-Checkbox-Filter-Module
 Simple Yii2 Checkbox Filter Module
 
-Yii2 filter module v0.5
+Yii2 filter module v0.5.5
 
 Видео: http://www.youtube.com/watch?v=Vah2j5WzXIs
 
@@ -89,7 +89,8 @@ $filter->setFilter([
             'Green',
             'Blue',
             'Black'
-        ]
+        ],
+        'class' => 'horizontal'
     ],
     [
         'property' => 'size',
@@ -118,6 +119,12 @@ $filter->setFilter([
     ]
 ], false);
 ```
+Вы можете задать дополнительные классы для checkbox'ов, путем задания свойства `class`. Данный фильтр содержит 2 стиля для checkbox'ов фильтра: класс `horizontal` и класс `vertical` для вертикального расположения. Если свойство `class` не установлено, то будет использоваться стиль `horizontal` по умолчанию.
+Значение свойства `class` может быть строкой:
+`'class' => 'horizontal additional class'` 
+или массивом: 
+`'class' => ['vertical', 'additionalClass']`
+
 
 В том месте, где необходимо вывести Ajax View с отфильтрованными данными, необходимо вызвать метод Фильтра renderDataView(), с заданными параметрами:
 ```

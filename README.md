@@ -1,7 +1,7 @@
 # Simple-Yii2-Checkbox-Filter-Module
 Simple Yii2 Checkbox Filter Module
 
-Yii2 filter module v0.5
+Yii2 filter module v0.5.5
 
 Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
 
@@ -86,7 +86,8 @@ $filter->setFilter([
             'Green',
             'Blue',
             'Black'
-        ]
+        ],
+        'class' => 'horizontal'
     ],
     [
         'property' => 'size',
@@ -99,6 +100,7 @@ $filter->setFilter([
     ]
 ]);
 ```
+
 You can choose between Ajax or non-Ajax filtering by setting second setFilter() parameter to 'true' or 'false' values:
 ```
 $filter->setFilter([
@@ -114,6 +116,12 @@ $filter->setFilter([
     ]
 ], false);
 ```
+You can set additional class or classes to each filters group by setting `class` property. This filter has two default style for checkbox: `horizontal` and `vertical` class for vertical checkboxes placement. If `class` property not set, used `horizontal` class as default.
+You can set `class` value as string:
+`'class' => 'horizontal additional class'` 
+or as array: 
+`'class' => ['vertical', 'additionalClass']`
+
 
 Then, where you want to render ajax view with filtered data, call `renderDataView()`:
 ```
