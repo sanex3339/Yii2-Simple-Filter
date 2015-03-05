@@ -15,6 +15,10 @@ class FilterDataGetRequest extends FilterData
                     $property = array($property);
                 if (array_search($category, array_keys($this->model->attributes))) {
                     $this->where[$category] = $property;
+                } elseif ($category == 'range_from') {
+                    $this->whereRange[] = ['>=', key($property), $property[key($property)]];
+                } elseif ($category == 'range_to') {
+                    $this->whereRange[] = ['<=', key($property), $property[key($property)]];
                 } else {
                     $this->getParams[$category] = $property;
                 }     

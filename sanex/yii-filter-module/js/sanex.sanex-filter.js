@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	var filter = {};
+	var range = {};
 	var json;
 	var oldGetParams; //variable for storage old GET-params after new get params was applied by createUrl() method 
 
@@ -12,6 +13,69 @@ $(document).ready(function() {
 		if (SanexFilterAjax)
 			createUrl($(this)); //disable history url generation when ajax disabled
 		createFilter();
+	});
+
+	$(function(){
+		//url for test 
+		//http://hexal/catalog/?filter=1&range_from[id]=15000&range_to[id]=20000&range_from[test]=18000&range_to[test]=21000
+		var fromId = $.query.GET('range_from');
+		var toId = $.query.GET('range_to');
+		var getRange = {};
+		var getRangeFrom = {};
+		var getRangeTo = {};
+		for (id in fromId) {
+			getRangeFrom[id] = {'from': fromId[id]};
+		}
+		for (id in toId) {
+			getRangeTo[id] = {'to': toId[id]};
+		}
+		getRange = $.extend(true, getRangeFrom, getRangeTo);
+
+		if (getRange) {
+			for (cat in getRange) {
+				if (!getRange[cat].from)
+				getRange[cat].from = 0;
+				if (!getRange[cat].to)
+					getRange[cat].to = initTo;
+			}
+		}
+
+		$('.fltr-range').each(function(){
+			var category = $(this).parent().attr('id'); 
+			var elem = $('#'+$(this).attr('id'));
+			var initFrom = elem.data('range-from');
+			var initTo = elem.data('range-to');
+
+			if (jQuery.isEmptyObject(getRange[category])) {
+				var from = initFrom;
+				var to = initTo;
+			} else {
+				var from = getRange[category].from;
+				var to = getRange[category].to;
+			}
+
+			$(elem).slider({
+				range: true,
+				min: initFrom,
+				max: initTo,
+				values: [from, to],
+				slide: function( event, ui ) {
+					$('body').css('cursor', 'pointer');
+					$('#fltr-range-amount-'+category).html(ui.values[0]+" - " +ui.values[1]);
+				},
+				change: function( event, ui ){
+					$('body').css('cursor', 'default');
+					url = $.query.SET('filter', '1').SET('range_from['+category+']', $(elem).slider("values", 0)).SET('range_to['+category+']', $(elem).slider("values", 1)).toString();
+					window.history.pushState('', '', url);
+					if (!SanexFilterAjax) {
+						location.href = location.search;
+					} else {
+						createFilter();		
+					}
+				}
+			});
+			$('#fltr-range-amount-'+category).html($(elem).slider("values", 0)+" - "+$(elem).slider("values", 1));
+		});
 	});
 
     function getCheckStateByUrlParams() {
@@ -47,6 +111,7 @@ $(document).ready(function() {
 
     //create json array with filter params
 	function createFilter() {
+		//checkboxes
 		$('.fltr-wrapper .fltr-cat').each(function() {
 			var array = [];
 			var category = $(this).attr('id');
@@ -63,6 +128,18 @@ $(document).ready(function() {
 				delete filter[category]; //delete all empty values from filter object
 			}
 		});
+		//range sliders
+		$('.fltr-range').each(function(index) {
+			var array = [];
+			var category = $(this).parent().attr('id'); 
+			var elem = $('#'+$(this).attr('id'));
+			var from = $(elem).slider("values", 0);
+			var to = $(elem).slider("values", 1);
+
+			var property = from+'-'+to;
+			range[category] = {range: property};
+		});
+		$.extend(true, filter, range); //combine range with filter object
 		json = JSON.stringify(filter);
 		sendFilter(json);
 	}

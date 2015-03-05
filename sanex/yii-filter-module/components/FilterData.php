@@ -14,7 +14,8 @@ abstract class FilterData
 				$useDataProvider;
 
 	//class properties
-	protected   $data,
+	protected   $whereRange = [],
+				$data,
 				$getParams = [],
 				$limit,
 				$offset,
@@ -64,8 +65,12 @@ abstract class FilterData
 		$this->orderBy = $this->useDataProvider ? null : ($query->orderBy ? $query->orderBy : null); 
 		$this->sort = $query->orderBy; //set $this->sort property for dataProvider sorting													
 
-		//build final query
+		//build query
 		$this->query = $query->where($this->where)->limit($this->limit)->offset($this->offset)->orderBy($this->orderBy);
+		//add to query ranges
+		foreach ($this->whereRange as $key => $value) {
+			$this->query->andWhere($value);
+		}
 		return $this;
 	}
 

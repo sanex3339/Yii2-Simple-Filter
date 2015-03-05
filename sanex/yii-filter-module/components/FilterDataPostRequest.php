@@ -8,11 +8,17 @@ class FilterDataPostRequest extends FilterData
 {
 	protected function setWhereArray()
 	{
-        foreach ($this->filter as $name => $properties) {            
-            if(array_search($name, array_keys($this->model->attributes))) {
-                $this->where[$name] = explode(',', $properties['properties']); 
+        foreach ($this->filter as $name => $properties) {    
+            if(array_search($name, array_keys($this->model->attributes)) !== false) {
+                if (isset($properties['properties'])) {
+                    $this->where[$name] = explode(',', $properties['properties']);     
+                } else if (isset($properties['range'])) {
+                    $range = explode('-', $properties['range']);
+                    $this->whereRange[] = ['between', $name, $range[0], $range[1]];
+                }
             } else {
-                $this->getParams[$name] = explode(',', $properties['properties']);
+                if (isset($properties['properties'])) 
+                    $this->getParams[$name] = explode(',', $properties['properties']);
             }       
         } 
         return $this;

@@ -64,3 +64,37 @@
 {
 	background-position: 0 -13px;
 }
+
+.fltr-range-amount{
+	display: block;
+	width:auto;
+	height: 20px;
+}
+
+.fltr-range
+{
+	height: 10px!important;
+	min-width: 120px;
+	width: 90%;
+	margin: 0px 0px 10px 0px;
+	border: 1px solid #8b9cc5;
+	border-radius: 0;
+}
+
+.fltr-range .ui-slider-handle
+{
+	width: 14px;
+	height: 14px;
+	top: -2px;
+	border: none;
+	border-radius: 0;
+	background: #8b9cc5;
+	outline: none;
+	cursor: pointer;
+}
+
+.fltr-range .ui-slider-range
+{
+	background: #8b9cc5;
+	opacity: 0.5;
+}

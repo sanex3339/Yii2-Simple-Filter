@@ -22,6 +22,7 @@ class FilterAsset extends AssetBundle
     ];
 
     public $depends = [
+        'yii\jui\JuiAsset',
         'yii\web\YiiAsset'
     ];
 }
