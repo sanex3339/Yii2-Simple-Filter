@@ -15,14 +15,13 @@ $(document).ready(function() {
 		createFilter();
 	});
 
-	$(function(){
-		//url for test 
-		//http://hexal/catalog/?filter=1&range_from[id]=15000&range_to[id]=20000&range_from[test]=18000&range_to[test]=21000
+	//range slider
+	$(function() {
 		var fromId = $.query.GET('range_from');
 		var toId = $.query.GET('range_to');
-		var getRange = {};
-		var getRangeFrom = {};
-		var getRangeTo = {};
+		var getRange = {}, getRangeFrom = {}, getRangeTo = {};
+
+		//create getRange object from `range_from` and `range_to` GET-params 
 		for (id in fromId) {
 			getRangeFrom[id] = {'from': fromId[id]};
 		}
@@ -31,27 +30,24 @@ $(document).ready(function() {
 		}
 		getRange = $.extend(true, getRangeFrom, getRangeTo);
 
-		if (getRange) {
-			for (cat in getRange) {
-				if (!getRange[cat].from)
-				getRange[cat].from = 0;
-				if (!getRange[cat].to)
-					getRange[cat].to = initTo;
-			}
-		}
-
-		$('.fltr-range').each(function(){
+		//create range slider
+		$('.fltr-range').each(function() {
 			var category = $(this).parent().attr('id'); 
 			var elem = $('#'+$(this).attr('id'));
 			var initFrom = elem.data('range-from');
 			var initTo = elem.data('range-to');
+			var from, to;
 
 			if (jQuery.isEmptyObject(getRange[category])) {
-				var from = initFrom;
-				var to = initTo;
+				from = initFrom;
+				to = initTo;
 			} else {
-				var from = getRange[category].from;
-				var to = getRange[category].to;
+				from = getRange[category].from;
+				to = getRange[category].to;
+				if (typeof getRange[category].from == 'undefined')
+					from = initFrom;
+				if (typeof getRange[category].to == 'undefined')
+					to = initTo;
 			}
 
 			$(elem).slider({
@@ -59,14 +55,16 @@ $(document).ready(function() {
 				min: initFrom,
 				max: initTo,
 				values: [from, to],
-				slide: function( event, ui ) {
-					$('body').css('cursor', 'pointer');
+				slide: function(event, ui) {
+					$('body').css('cursor', 'pointer'); //set cursor pointer for body while mousedown on slider
 					$('#fltr-range-amount-'+category).html(ui.values[0]+" - " +ui.values[1]);
 				},
-				change: function( event, ui ){
-					$('body').css('cursor', 'default');
+				change: function(event, ui){
+					$('body').css('cursor', 'default'); //set default cursor
+					//put to url GET-params with range
 					url = $.query.SET('filter', '1').SET('range_from['+category+']', $(elem).slider("values", 0)).SET('range_to['+category+']', $(elem).slider("values", 1)).toString();
 					window.history.pushState('', '', url);
+					//if ajax disabled - reload page after mouseup, else - create filter
 					if (!SanexFilterAjax) {
 						location.href = location.search;
 					} else {
@@ -74,6 +72,7 @@ $(document).ready(function() {
 					}
 				}
 			});
+			//set range slider values on load
 			$('#fltr-range-amount-'+category).html($(elem).slider("values", 0)+" - "+$(elem).slider("values", 1));
 		});
 	});
@@ -128,6 +127,7 @@ $(document).ready(function() {
 				delete filter[category]; //delete all empty values from filter object
 			}
 		});
+		
 		//range sliders
 		$('.fltr-range').each(function(index) {
 			var array = [];
@@ -139,6 +139,8 @@ $(document).ready(function() {
 			var property = from+'-'+to;
 			range[category] = {range: property};
 		});
+
+		//combine, convert to json
 		$.extend(true, filter, range); //combine range with filter object
 		json = JSON.stringify(filter);
 		sendFilter(json);
@@ -162,8 +164,7 @@ $(document).ready(function() {
 	}
 
 	//function generate href for all filter checkboxes based on current GET params and checkboxes values
-	function createFilterUrls()
-	{
+	function createFilterUrls() {
 		$('.fltr-wrapper .fltr-check').each(function(){
 			var elem = $(this);
 			var getQuery = window.location.search.substring(1);
@@ -178,8 +179,7 @@ $(document).ready(function() {
 	}
 
 	//function for fix invalid href for all urls inside Ajax view with Pjax content
-	function replaceUrls(elem)
-	{
+	function replaceUrls(elem) {
 		elem.find('a:not(".sfCustomUrl")').each(function(){
 			var linkOldHref = $(this).attr('href');
 			var linkGetParamsArray = getQueryParameters(linkOldHref.split('/').pop().substring(1));
