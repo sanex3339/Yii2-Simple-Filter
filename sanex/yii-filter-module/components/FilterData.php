@@ -67,7 +67,7 @@ abstract class FilterData
 
 		//build query
 		$this->query = $query->where($this->where)->limit($this->limit)->offset($this->offset)->orderBy($this->orderBy);
-		//add to query ranges
+		//add ranges to query
 		foreach ($this->whereRange as $key => $value) {
 			$this->query->andWhere($value);
 		}
