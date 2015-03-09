@@ -18,11 +18,11 @@ Yii2 Simple Filter Module v0.7.0
 
 Выполните в терминале следующую команду:
 ```
-php composer.phar require --prefer-dist sanex/yii2-simple-filter "*"
+$ php composer.phar require --prefer-dist sanex/yii2-simple-filter "dev-master"
 ```
 или добавьте
 ```
-"sanex/yii2-simple-filter": "*"
+"sanex/yii2-simple-filter": "dev-master"
 ```
 в секцию `require` файла `composer.json`.
 
@@ -35,7 +35,7 @@ php composer.phar require --prefer-dist sanex/yii2-simple-filter "*"
 ####Контроллер
 В контроллере, к которому пренадлежит основной View, в котором мы хотим вывести чекбоксы и подключить Ajax View, необходимо создать объект с инстансом модуля и задать ему параметры:
 ```
-use sanex\simplyfilter\SimplyFilter;
+use sanex\simplefilter\SimpleFilter;
 
 ...
 
@@ -43,7 +43,7 @@ $model = new Catalog;
 
 $ajaxViewFile = '@sanex/catalog/views/catalog/catalog-ajax';
 
-$filter = SimplyFilter::getInstance();
+$filter = SimpleFilter::getInstance();
 $filter->setParams([
     'ajax' => true,
     'model' => $model,

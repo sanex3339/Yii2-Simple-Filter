@@ -11,11 +11,11 @@ Install module through [composer](http://getcomposer.org/download/)
 
 Run
 ```
-php composer.phar require --prefer-dist sanex/yii2-simple-filter "*"
+$ php composer.phar require --prefer-dist sanex/yii2-simple-filter "dev-master"
 ```
 or add
 ```
-"sanex/yii2-simple-filter": "*"
+"sanex/yii2-simple-filter": "dev-master"
 ```
 to the `require` section of `composer.json` file.
 
@@ -28,7 +28,7 @@ Last step: add `'enablePrettyUrl' => true` to the `urlManager` in config file.
 ####Controller:
 In controller, which has view (main view), where you want show data with filter, you must create object with instance of `SimplyFilter` module and set to him parameters:
 ```
-use sanex\simplyfilter\SimplyFilter;
+use sanex\simplefilter\SimpleFilter;
 
 ...
 
@@ -36,7 +36,7 @@ $model = new Catalog;
 
 $ajaxViewFile = '@sanex/catalog/views/catalog/catalog-ajax';
 
-$filter = SimplyFilter::getInstance();
+$filter = SimpleFilter::getInstance();
 $filter->setParams([
     'ajax' => true,
     'model' => $model,
