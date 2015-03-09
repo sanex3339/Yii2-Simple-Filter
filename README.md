@@ -48,12 +48,17 @@ $filter->setParams([
 `$ajaxViewFile` - alias (or path) to ajax view, where you want to show data. You must create that view file before continue.
 
 `setParams()` properties:
+
 `model` - model, which data need to filter;
+
 `ajax` - (optional, if not set - `true`) you can choose between Ajax or non-Ajax filtering by setting this parameter to boolean `true` or `false` values;
+
 `query` - (optional) - \yii\db\ActiveQuery object, see below;
+
 `useDataProvider` - (optional, if not set - `false`) if (bool) true - return data in Ajax View as dataProvider, if (bool) false or not set - return data as model;
 
 As default, result query with filter looks like `SELECT COUNT(*) FROM 'catalog' WHERE 'color' IN ('Green', 'Red')`
+
 If you want create custom query with filter you must set `query` parameter in `setParams()` method with `\yii\db\ActiveQuery` object as method parameter, that contain query parameters.
 
 ```
