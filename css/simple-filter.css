@@ -1,0 +1,66 @@
+.fltr-wrapper
+{
+	margin-bottom: 50px;
+}
+
+.fltr-cat
+{
+	margin: 0px 0px 20px 0px;
+}
+
+.fltr-cat-caption
+{
+	display: block;
+	font-weight: bold;
+	font-size: 15px;
+	margin: 0px 0px 5px 0px;
+}
+
+.fltr-checkbox
+{
+	cursor: pointer;
+}
+
+.fltr-label
+{
+	margin: 0px 15px 0px 0px;
+	padding: 0px 0px 0px 6px;
+	font-size: 15px;
+	cursor: pointer;
+}
+
+.fltr-check, .fltr-check.horizontal
+{
+	background: url(../img/simple-filter-checkbox.png) no-repeat;
+	padding: 0px 0px 0px 18px;
+	display: inline-block;
+	float: left;
+	height: 12px;
+	font-size: 14px;
+	line-height: 14px;
+	margin: 0px 20px 0px 0px;
+	cursor: pointer;
+	color: #000;
+	text-decoration: none;
+}
+
+.fltr-check.vertical
+{
+	display: block;
+	float: none;
+	margin-bottom: 10px;
+}
+
+.fltr-check:hover,
+.fltr-check:active,
+.fltr-check:visited,
+.fltr-check:focus
+{
+	text-decoration: none;
+	color: #000;
+}
+
+.fltr-check.active
+{
+	background-position: 0 -13px;
+}

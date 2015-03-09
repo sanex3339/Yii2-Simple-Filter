@@ -1,0 +1,26 @@
+{
+    "name": "sanex/yii2-simple-filter",
+    "description": "Simple Yii2 filter module with checkboxes",
+    "keywords": ["yii", "yii2", "filter", "checkbox", "module"],
+    "type": "yii2-extension",
+    "version": "0.7.0",
+    "license": "WTFPL",
+    "authors": [
+        {
+            "name": "SaneX",
+            "email": "sanex3339@yandex.ru",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": { 
+            "sanex\\simplefilter\\": "" 
+        }
+    },
+    "extra": {
+        "bootstrap": "sanex\\simplefilter\\Bootstrap"
+    }
+}
