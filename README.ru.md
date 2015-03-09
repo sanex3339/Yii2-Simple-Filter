@@ -14,6 +14,9 @@ Yii2 Simple Filter Module v0.7.0
 
 
 ####Установка:
+
+Видео установки и настройки на чистое Yii2 Base приложение: http://www.youtube.com/watch?v=Wnn_xVcTun0
+
 Установите модуль через [composer](http://getcomposer.org/download/)
 
 Выполните в терминале следующую команду:

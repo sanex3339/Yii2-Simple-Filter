@@ -7,6 +7,8 @@ Yii2 Simple Filter Module v0.7.0
 Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
 
 ###Installation:
+How to install and configure modlue on clear Yii2 Base application (video): http://www.youtube.com/watch?v=Wnn_xVcTun0
+
 Install module through [composer](http://getcomposer.org/download/)
 
 Run
