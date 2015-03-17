@@ -1,7 +1,7 @@
 # Yii2-Simple-Filter
 Yii2 Simple Filter Module
 
-Yii2 Simple Filter Module v0.7.0
+Yii2 Simple Filter Module v0.8.0
 #####Not compatible with older versions, because methods names were changed! 
 
 Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
@@ -43,6 +43,7 @@ $filter->setParams([
     'ajax' => true,
     'model' => $model,
     'query' => $query,
+    'useCache' => true,
     'useDataProvider' => true,
 ]);
 ```
@@ -56,6 +57,8 @@ $filter->setParams([
 `ajax` - (optional, if not set - `true`) you can choose between Ajax or non-Ajax filtering by setting this parameter to boolean `true` or `false` values;
 
 `query` - (optional) - \yii\db\ActiveQuery object, see below;
+
+`useCache` - (optional, if not set - `false`) if (bool) true - return cached data;
 
 `useDataProvider` - (optional, if not set - `false`) if (bool) true - return data in Ajax View as dataProvider, if (bool) false or not set - return data as model;
 

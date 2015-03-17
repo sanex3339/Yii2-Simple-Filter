@@ -15,6 +15,7 @@ class SimpleFilter extends \yii\base\Module
             $ajax = true,
             $model,
             $query,
+            $useCache = false,
             $useDataProvider = false,
 
             //renderAjaxView() properties
@@ -52,6 +53,7 @@ class SimpleFilter extends \yii\base\Module
         
         $this->tempSessionData['model'] = $this->model;
         $this->tempSessionData['query'] = $this->query;
+        $this->tempSessionData['useCache'] = $this->useCache;
         $this->tempSessionData['useDataProvider'] = $this->useDataProvider;
         $this->session['SanexFilter'] = $this->tempSessionData;
     }

@@ -4,6 +4,7 @@ namespace sanex\simplefilter\components;
 use Yii;
 use yii\base\UnknownPropertyException;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
 
 abstract class FilterData
 {
@@ -11,6 +12,7 @@ abstract class FilterData
 	protected   $filter,
 				$model,
 				$query,
+				$useCache,
 				$useDataProvider;
 
 	//class properties
@@ -22,8 +24,8 @@ abstract class FilterData
 				$sort,
 				$where = [];
 
-	//default limit value for custom or ActiveDataProvider pagination
-	const QUERY_LIMIT = 50;		
+	const CACHE_DURATION = 600; //cache duration
+	const QUERY_LIMIT = 50; //default limit value for custom or ActiveDataProvider pagination
 
 	public function __construct(Array $properties = [])
 	{
@@ -79,7 +81,24 @@ abstract class FilterData
 		if ($this->sort)
 			$dpProps['sort'] = ['defaultOrder' => [array_keys($this->sort)[0] => SORT_ASC]];
 
-		//set data
-		$this->data = $this->useDataProvider ? new ActiveDataProvider($dpProps) : $this->query->all();
+		//set data as ActiveDataProvider or ActiveQuery object
+		$this->data = $this->useDataProvider ? new ActiveDataProvider($dpProps) : $this->query;
+
+		//set cached or not cached data
+		if ($this->useCache) {
+			$data = $this->data;
+	        Yii::$app->db->cache(function () use ($data) {
+	        	if ($this->useDataProvider) {
+	        		return $this->data->prepare(); //set cached dataProvider data
+	        	} else {
+	        		$this->data = $this->data->all();
+	        		return $this->data; //set cached query data
+	        	}
+	        }, self::CACHE_DURATION);
+    	} else {
+    		//set not cached query data. Not cached dataProvider data already in `$this->data`
+			if (!$this->useDataProvider)
+				$this->data = $this->data->all();
+    	}
 	}
 }	

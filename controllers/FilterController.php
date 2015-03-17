@@ -42,6 +42,7 @@ class FilterController extends Controller
         $filterData = new FilterDataGetRequest([
             'model' => $this->module->model,
             'query' => $this->module->query,
+            'useCache' => $this->module->useCache,
             'useDataProvider' => $this->module->useDataProvider,
         ]);
         $data = $filterData->getData();
@@ -75,6 +76,7 @@ class FilterController extends Controller
                 'filter' => json_decode(Yii::$app->request->post('filter'), true),
                 'model' => $parameters['model'],
                 'query' => isset($parameters['query']) ? $parameters['query'] : null,
+                'useCache' => $parameters['useCache'],
                 'useDataProvider' => $parameters['useDataProvider'],
             ]);
             $data = $filterData->getData();
