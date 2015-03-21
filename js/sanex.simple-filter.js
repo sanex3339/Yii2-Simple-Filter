@@ -22,14 +22,14 @@ $(document).ready(function() {
 		for (params in urlParams) {
 			var category = params.split('[', 1);
 			var properties = urlParams[params];
-			var element = $('.fltr-wrapper .fltr-cat#'+category);
+			var element = $('.fltr-wrapper .fltr-cat[data-property="'+category+'"]');
 			element.find('.fltr-check[value="'+properties+'"]').addClass('active');
 		}
     }
 
     //create GET url with help of jquery.query-object.js
     function createUrl(elem) {
-    	var category = elem.parent().attr('id');
+    	var category = elem.parent().data('property');
 		var url;
 		$.query.parseNew(location.search, location.hash.split("?").length > 1 ? location.hash.split("?")[1] : "");
 		if (!elem.hasClass('active')) {
@@ -47,9 +47,14 @@ $(document).ready(function() {
 
     //create json array with filter params
 	function createFilter() {
+		var counter = 0;
+		var prevCategory;
 		$('.fltr-wrapper .fltr-cat').each(function() {
 			var array = [];
-			var category = $(this).attr('id');
+			var category = $(this).data('property');
+
+			if (category != prevCategory) counter = 0;
+
 			//find all elements inside category
 			$(this).find('.fltr-check.active').each(function(index) {
 				array[index] = $(this).attr('value'); //for each found element put his value into array
@@ -58,12 +63,15 @@ $(document).ready(function() {
 			//Делаем новый объект, с ключом - имя категории, значение - другой элемент... 
 			//...с ключом properties, значение - сформированная строка
 			if (property.length > 0) {
-				filter[category] = {properties: property};
+				filter[category+'['+counter+']'] = {properties: property};
 			} else {
-				delete filter[category]; //delete all empty values from filter object
+				delete filter[category+'['+counter+']']; //delete all empty values from filter object
 			}
+			counter = counter + 1;
+			prevCategory = category;
 		});
 		json = JSON.stringify(filter);
+		console.log(json);
 		sendFilter(json);
 	}
 
@@ -76,8 +84,8 @@ $(document).ready(function() {
 			data: {_csrf: yii.getCsrfToken(), filter: filter},
 			dataType: 'html',
 			success: function(data) {
-					var wrapper = $('.fltr-data-wrapper');
-				    wrapper.children().remove();
+				var wrapper = $('.fltr-data-wrapper');
+				wrapper.children().remove();
 			    wrapper.html(data);
 			    replaceUrls(wrapper);
 			}
@@ -90,7 +98,7 @@ $(document).ready(function() {
 		$('.fltr-wrapper .fltr-check').each(function(){
 			var elem = $(this);
 			var getQuery = window.location.search.substring(1);
-			var category = elem.parent().attr('id');
+			var category = elem.parent().data('property');
 			if (!elem.hasClass('active')) {
 				var filterGetParameter = $.query.set('filter', '1').SET(category+'[]', elem.attr('value')).toString();
 			} else {

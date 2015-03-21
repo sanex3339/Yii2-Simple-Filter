@@ -87,18 +87,18 @@ abstract class FilterData
 		//set cached or not cached data
 		if ($this->useCache) {
 			$data = $this->data;
-	        Yii::$app->db->cache(function () use ($data) {
-	        	if ($this->useDataProvider) {
-	        		return $this->data->prepare(); //set cached dataProvider data
-	        	} else {
-	        		$this->data = $this->data->all();
-	        		return $this->data; //set cached query data
-	        	}
-	        }, self::CACHE_DURATION);
-    	} else {
-    		//set not cached query data. Not cached dataProvider data already in `$this->data`
+		    Yii::$app->db->cache(function () use ($data) {
+		    	if ($this->useDataProvider) {
+		    		return $this->data->prepare(); //set cached dataProvider data
+		    	} else {
+		    		$this->data = $this->data->all();
+		    		return $this->data; //set cached query data
+		    	}
+		    }, self::CACHE_DURATION);
+		} else {
+			//set not cached query data. Not cached dataProvider data already in `$this->data`
 			if (!$this->useDataProvider)
 				$this->data = $this->data->all();
-    	}
+		}
 	}
 }	
