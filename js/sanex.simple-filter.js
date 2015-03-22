@@ -71,7 +71,6 @@ $(document).ready(function() {
 			prevCategory = category;
 		});
 		json = JSON.stringify(filter);
-		console.log(json);
 		sendFilter(json);
 	}
 
@@ -116,12 +115,11 @@ $(document).ready(function() {
 			var linkGetParamsArray = getQueryParameters(linkOldHref.split('/').pop().substring(1));
 			var getQuery = '?'+window.location.search.substring(1);
 			var linkGetParams = '&'+linkOldHref.split('?').pop();
+			var href;
+			$.query.parseNew(location.search, location.hash.split("?").length > 1 ? location.hash.split("?")[1] : "");
 			for (getParam in linkGetParamsArray) {
-				if (getParameterByName(getParam)) {
-					getQuery = $.query.REMOVE(getParam).toString();
-				}
+				href = $.query.SET(getParam, linkGetParamsArray[getParam]).toString();	
 			}
-			href = getQuery+linkGetParams;
 			if (href.charAt(0) == '&') 
 				href = href.replace('&','?');
 			$(this).attr('href', href);
@@ -147,13 +145,5 @@ $(document).ready(function() {
 		    }   
 		})();
 		return urlParams;
-	}
-
-	//return GET param by name
-	function getParameterByName(name) {
-	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-	        results = regex.exec(location.search);
-	    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 });
