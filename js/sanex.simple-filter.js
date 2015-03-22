@@ -118,7 +118,8 @@ $(document).ready(function() {
 			var href;
 			$.query.parseNew(location.search, location.hash.split("?").length > 1 ? location.hash.split("?")[1] : "");
 			for (getParam in linkGetParamsArray) {
-				href = $.query.SET(getParam, linkGetParamsArray[getParam]).toString();	
+				var getParamName = getParam.search('\\?') > 0 ? getParam.split('?').pop() : getParam;
+				href = $.query.SET(getParamName, linkGetParamsArray[getParam]).toString();	
 			}
 			if (href.charAt(0) == '&') 
 				href = href.replace('&','?');
