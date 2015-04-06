@@ -1,7 +1,7 @@
 # Yii2-Simple-Filter
 Yii2 Simple Filter Module
 
-Yii2 Simple Filter Module v0.8.2
+Yii2 Simple Filter Module v0.8.3
 #####Не совместимо с более ранними версиями, т.к. изменились названия методов, а также способ установки параметров! 
 
 Видео: http://www.youtube.com/watch?v=Vah2j5WzXIs
