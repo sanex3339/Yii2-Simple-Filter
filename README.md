@@ -1,7 +1,7 @@
 # Yii2-Simple-Filter
 Yii2 Simple Filter Module
 
-Yii2 Simple Filter Module v0.8.3
+Yii2 Simple Filter Module v0.9.0dev
 #####Not compatible with older versions, because methods names were changed! 
 
 Video: http://www.youtube.com/watch?v=Vah2j5WzXIs
