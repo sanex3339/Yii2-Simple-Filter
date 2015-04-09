@@ -58,7 +58,7 @@ $filter->setParams([
 
 `query` - (optional) - \yii\db\ActiveQuery object, see below;
 
-`useCache` - (optional, if not set - `false`) if (bool) true - return cached data;
+`useCache` - (optional, if not set - `false`) if (bool) true - return cached data, if (int) value - cache duration in seconds;
 
 `useDataProvider` - (optional, if not set - `false`) if (bool) true - return data in Ajax View as dataProvider, if (bool) false or not set - return data as model;
 
