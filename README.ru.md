@@ -48,7 +48,7 @@ $ajaxViewFile = '@sanex/catalog/views/catalog/catalog-ajax';
 
 $filter = SimpleFilter::getInstance();
 $filter->setParams([
-    'ajax' => true,
+    'useAjax' => true,
     'model' => $model,
     'query' => $query,
     'useCache' => true,
@@ -62,7 +62,7 @@ $filter->setParams([
 
 `model` - модель, данные которой неотходимо отфильтровать;
 
-`ajax` - (опционально, если не задано - `true`) можно выбирать между Ajax или не-Ajax фильтрацией, путем задания значения этого параметра в (bool) `true` или `false`;
+`useAjax` - (опционально, если не задано - `true`) можно выбирать между Ajax или не-Ajax фильтрацией, путем задания значения этого параметра в (bool) `true` или `false`;
 
 `query` - (опционально) - объект \yii\db\ActiveQuery, см. ниже;
 
@@ -136,7 +136,7 @@ $filter->renderDataView($ajaxViewFile, ['testParam' => $testParam]);
 
 
 ####Ajax View
-В Ajax View, отфильтрованные данные передаются в переменной `$sanexFilterData`.
+В Ajax View, отфильтрованные данные передаются в переменной `$simpleFilterData`.
 Далее они могут быть помещены в GridView или на их основе, через цикл, может быть построена таблица.
 
 #####Для всех ссылок внутри Ajax View, которые не используются для сортировки или постраничной навигации (как у gridView, так и для кастомной), необходимо добавить класс `sfCustomUrl`!!!! К ссылкам без этого класса будут автоматически добавляться GET-параметры, необходимые для работы фильтра, сортировки и постраничной навигации.

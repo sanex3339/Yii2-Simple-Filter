@@ -40,7 +40,7 @@ $ajaxViewFile = '@sanex/catalog/views/catalog/catalog-ajax';
 
 $filter = SimpleFilter::getInstance();
 $filter->setParams([
-    'ajax' => true,
+    'useAjax' => true,
     'model' => $model,
     'query' => $query,
     'useCache' => true,
@@ -54,7 +54,7 @@ $filter->setParams([
 
 `model` - model, which data need to filter;
 
-`ajax` - (optional, if not set - `true`) you can choose between Ajax or non-Ajax filtering by setting this parameter to boolean `true` or `false` values;
+`useAjax` - (optional, if not set - `true`) you can choose between Ajax or non-Ajax filtering by setting this parameter to boolean `true` or `false` values;
 
 `query` - (optional) - \yii\db\ActiveQuery object, see below;
 
@@ -129,7 +129,7 @@ $filter->renderAjaxView($ajaxViewFile, ['testParam' => $testParam]);
 
 
 ####Ajax View
-In ajax view, you can get filtered data (model or dataProvider) through `$sanexFilterData` variable.
+In ajax view, you can get filtered data (model or dataProvider) through `$simpleFilterData` variable.
 
 ######Note! Module pass to ajax view only data! You must create in that ajax view `<table></table>` or use GridView widget to show data, same way as with all other Yii2 models!
 

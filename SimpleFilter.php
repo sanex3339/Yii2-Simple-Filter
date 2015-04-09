@@ -9,86 +9,205 @@ use yii\web\Session;
 
 class SimpleFilter extends \yii\base\Module
 {
-    public  $controllerNamespace = 'sanex\simplefilter\controllers',
+    /**
+     * @var object model object
+     */
+    public $model;
 
-            //init properties
-            $ajax = true,
-            $model,
-            $query,
-            $useCache = false,
-            $useDataProvider = false,
+    /**
+     * @var object yii\db\ActiveQuery object
+     */
+    public $query;
 
-            //renderAjaxView() properties
-            $ajaxViewFile,
-            $ajaxViewParams = [],        
+    /**
+     * @var bool use or not ajax for updating data
+     */
+    public $useAjax = true;
 
-            //setFilter() properties
-            $filter,
+    /**
+     * @var bool use or not cache
+     */
+    public $useCache = false;
 
-            //other properties
-            $availableParams = ['property', 'caption', 'values', 'class'],
-            $controllerRoute,
-            $session,
-            $tempSessionData;
+    /**
+     * @var bool return data as model or as dataProvider
+     */
+    public $useDataProvider = false;
 
+    //renderAjaxView() properties
+    /**
+     * @var string alias to ajax view file
+     */
+    public $ajaxViewFile;
+
+    /**
+     * @var array custom parameters what was send to ajax view
+     */
+    public $ajaxViewParams = [];
+
+    /**
+     * @var array setFilter() properties
+     */
+    public $filter;
+
+    /**
+     * @var string current controller route
+     */
+    public $controllerRoute;
+
+    /**
+     * @var object session object
+     */
+    public $session;
+
+    /**
+     * @var array temporary session data
+     */
+    private $tempSessionData;
+
+    /**
+     * @var array available public methods parameters
+     */
+    private $availableParameters = [
+        'setFilter' => [
+            'property',
+            'caption',
+            'values',
+            'class'
+        ],
+        'setParams' => [
+            'model',
+            'query',
+            'useAjax',
+            'useCache',
+            'useDataProvider'
+        ]
+    ];
+
+    /**
+     * module init method
+     */
     public function init()
     {
         parent::init();
         $this->session = new Session;
         $this->session->open();
-    }    
+    }
 
-    public function setParams(Array $params = []) 
+    /**
+     * set class properties with given parameters
+     * get current controller route in which module was called
+     * put that properties into session
+     *
+     * @param array $params
+     * @throws UnknownPropertyException
+     * @return void
+     */
+    public function setParams(Array $params = [])
     {
         if ($params) {
             foreach ($params as $key => $value) {
-                $this->{$key} = $value; 
+                if (in_array($key, $this->availableParameters['setParams'])) {
+                    $this->{$key} = $value;
+                } else {
+                    throw new UnknownPropertyException('Setting unknown property: ' . get_class($this) . '::' . $key);
+                }
+            }
+            if (!$this->model) {
+                throw new UnknownPropertyException("The parameter `model` is required", 1);
             }
         } else {
-            throw new UnknownPropertyException("Filter parameters must be set", 1);
+            throw new UnknownPropertyException('Filter parameters must be set', 1);
         }
-
-        //get route for controller in which called this module
         $this->getControllerRoute();
-        
-        $this->tempSessionData['model'] = $this->model;
-        $this->tempSessionData['query'] = $this->query;
-        $this->tempSessionData['useCache'] = $this->useCache;
-        $this->tempSessionData['useDataProvider'] = $this->useDataProvider;
-        $this->session['SanexFilter'] = $this->tempSessionData;
+        $this->setSessionData(['model', 'query', 'useCache', 'useDataProvider']);
     }
 
+    /**
+     * set $filter property and run action 'filter/set-filter'
+     *
+     * @param array $filter
+     * @return mixed
+     * @throws UnknownPropertyException
+     */
     public function setFilter(Array $filter = [])
     {
         if ($filter) {
             foreach ($filter as $filterGroup) {
                 foreach ($filterGroup as $key => $value) {
-                    if (in_array($key, $this->availableParams)) {
-                        $this->filter = $filter;
-                    } else {
+                    if (!in_array($key, $this->availableParameters['setFilter'])) {
                         throw new UnknownPropertyException('Setting unknown property: ' . get_class($this) . '::' . $key);
-                    } 
+                    }
+                    if (!is_string($value) && !is_array($value)) {
+                        throw new UnknownPropertyException('setFilter() values must be a string or array');
+                    }
+                    if (!is_array($filterGroup['values'])) {
+                        throw new UnknownPropertyException('setFilter() `values` parameter must be an array');
+                    }
                 }
             }
+            $this->filter = $filter;
         } else {
-            throw new UnknownPropertyException("Filter parameters must be set", 1);
+            throw new UnknownPropertyException('Filter parameters must be set', 1);
         }
-        
+
         return $this->runAction('filter/set-filter');
     }
 
+    /**
+     * send $ajaxViewFile and $ajaxViewParams to module controller and run action 'filter/show-data-get'
+     *
+     * @param $ajaxViewFile
+     * @param array $ajaxViewParams
+     * @return mixed
+     */
     public function renderAjaxView($ajaxViewFile, Array $ajaxViewParams = [])
-    {   
-        $this->tempSessionData['ajaxViewFile'] = $this->ajaxViewFile = $ajaxViewFile;
-        $this->tempSessionData['ajaxViewParams'] = $this->ajaxViewParams = $ajaxViewParams;
-        $this->session['SanexFilter'] = $this->tempSessionData;
+    {
+        if (!is_string($ajaxViewFile)) {
+            throw new UnknownPropertyException('$ajaxViewFile must be a string');
+        }
+        $this->ajaxViewFile = $ajaxViewFile;
+        $this->ajaxViewParams = $ajaxViewParams;
+        $this->setSessionData(['ajaxViewFile', 'ajaxViewParams']);
 
         return $this->runAction('filter/show-data-get');
     }
 
+    /**
+     * encrypt data with Yii2 cookie validation key
+     *
+     * @param $data
+     * @return string
+     */
+    private function encryptData($data)
+    {
+       return $encryptedData = Yii::$app->getSecurity()->encryptByKey(
+           trim(base64_encode(serialize($data))), Yii::$app->request->cookieValidationKey
+       );
+    }
+
+    /**
+     * get route for controller in which was called module
+     *
+     * @return void
+     */
     private function getControllerRoute()
     {
-        $url = str_replace("index.php", "", Url::to(['/'.Yii::$app->controller->getRoute()]));
-        $this->tempSessionData['controllerRoute'] = $this->controllerRoute = $url;
+        $this->controllerRoute = str_replace('index.php', '', Url::to(['/' . Yii::$app->controller->getRoute()]));
+        $this->setSessionData(['controllerRoute']);
+    }
+
+    /**
+     * put class properties into session
+     *
+     * @param array $properties
+     * @return void
+     */
+    private function setSessionData(Array $properties = [])
+    {
+        foreach ($properties as $property) {
+            $this->tempSessionData[$property] = $this->$property;
+        }
+        $this->session['SimpleFilter'] = $this->encryptData($this->tempSessionData);
     }
 }

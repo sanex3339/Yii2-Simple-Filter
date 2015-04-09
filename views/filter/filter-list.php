@@ -4,7 +4,7 @@
     use yii\web\View;
 
     FilterAsset::register($this);
-    $this->registerJs('var SimpleFilterAjax = '.$ajax, View::POS_HEAD);
+    $this->registerJs('var SimpleFilterAjax = ' . $useAjax . ';', View::POS_HEAD);
 ?>
 
 <div class="fltr-wrapper">

@@ -2,7 +2,6 @@
 namespace sanex\simplefilter\components;
 
 use sanex\simplefilter\components\FilterData;
-use yii\base\Exception;
 
 class FilterDataPostRequest extends FilterData
 {

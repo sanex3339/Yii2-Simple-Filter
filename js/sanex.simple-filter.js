@@ -1,18 +1,23 @@
-new function() {
+(function() {
     var simpleFilter = function () {
+        var dataWrapper = $('.fltr-data-wrapper');
+        var filter = {};
+        var linksDefaultGetParams = [];
+        var oldGetParams = [];
+
         var filterObject = {
-            var: {
-                dataWrapper: $('.fltr-data-wrapper'),
-                filter: {},
-                linksDefaultGetParams: [],
-                oldGetParams: []
-            },
             init: function () {
+                if (!this.historyApiCheck())
+                    SimpleFilterAjax = false;
+                this.historyApiCheck();
                 this.events();
                 this.getCheckboxState();
                 if (!SimpleFilterAjax)
                     this.setFilterUrls();
-                this.getDefaultLinksGetParams(this.var.dataWrapper);
+                this.getDefaultLinksGetParams(dataWrapper);
+            },
+            historyApiCheck: function () {
+                return !!(window.history && history.pushState);
             },
             events: function () {
                 var self = this;
@@ -59,39 +64,37 @@ new function() {
             getDefaultLinksGetParams: function (elem) {
                 var self = this;
                 elem.find('a:not(".sfCustomUrl")').each(function (index) {
-                    self.var.linksDefaultGetParams[index] = self.getQueryParameters($(this).attr('href').split('/').pop().split('?').pop());
+                    linksDefaultGetParams[index] = self.getQueryParameters($(this).attr('href').split('/').pop().split('?').pop());
                 });
             },
             replaceUrlForLinks: function (elem) {
-                var self = this;
                 elem.find('a:not(".sfCustomUrl")').each(function (index) {
                     $.query.parseNew(location.search, location.hash.split("?").length > 1 ? location.hash.split("?")[1] : "");
-                    for (getParam in self.var.linksDefaultGetParams[index]) {
-                        href = $.query.SET(getParam, self.var.linksDefaultGetParams[index][getParam]).toString();
+                    for (getParam in linksDefaultGetParams[index]) {
+                        href = $.query.SET(getParam, linksDefaultGetParams[index][getParam]).toString();
                     }
                     if (href.charAt(0) == '&')
-                        href = href.replace('&','?');
+                        href = href.replace('&', "?");
                     $(this).attr('href', href);
                 });
             },
             sendFilter: function (filterJsonFormat) {
                 var self = this;
                 $.ajax({
-                    url: SimpleFilterAjaxUrl + '?' + this.var.oldGetParams,
+                    url: SimpleFilterAjaxUrl + '?' + oldGetParams,
                     type: 'POST',
                     data: {_csrf: yii.getCsrfToken(), filter: filterJsonFormat},
                     dataType: 'html',
                     success: function (data) {
-                        self.var.dataWrapper.children().remove();
-                        self.var.dataWrapper.html(data);
-                        self.replaceUrlForLinks(self.var.dataWrapper);
+                        dataWrapper.children().remove();
+                        dataWrapper.html(data);
+                        self.replaceUrlForLinks(dataWrapper);
                     }
                 });
             },
             setFilterData: function () {
                 var counter = 0,
-                    prevCategory,
-                    self = this;
+                    prevCategory;
                 $('.fltr-wrapper .fltr-cat').each(function () {
                     var array = [],
                         category = $(this).data('property');
@@ -102,14 +105,14 @@ new function() {
                     });
                     var property = array.join();
                     if (property.length > 0) {
-                        self.var.filter[category + '[' + counter + ']'] = {properties: property};
+                        filter[category + '[' + counter + ']'] = {properties: property};
                     } else {
-                        delete self.var.filter[category + '[' + counter + ']'];
+                        delete filter[category + '[' + counter + ']'];
                     }
                     counter++;
                     prevCategory = category;
                 });
-                var filterJsonFormat = JSON.stringify(this.var.filter);
+                var filterJsonFormat = JSON.stringify(filter);
                 this.sendFilter(filterJsonFormat);
             },
             setFilterUrls: function () {
@@ -133,11 +136,13 @@ new function() {
                 if (!elem.hasClass('active')) {
                     url = $.query.SET('filter', '1').SET(category + '[]', elem.attr('value')).toString();
                     elem.addClass('active');
-                    window.history.pushState('', '', url);
+                    if (this.historyApiCheck())
+                        window.history.pushState('', '', url);
                 } else {
                     url = $.query.REMOVE(category, elem.attr('value'));
                     elem.removeClass('active');
-                    window.history.pushState('', '', url);
+                    if (this.historyApiCheck())
+                        window.history.pushState('', '', url);
                     oldGetParams = window.location.search.substring(1);
                 }
             }
@@ -145,4 +150,4 @@ new function() {
         filterObject.init();
     };
     return simpleFilter();
-}();
+})();
