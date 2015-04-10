@@ -26,4 +26,4 @@ class FilterDataPostRequest extends FilterData
         
         return $this;
     }
-}	
+}

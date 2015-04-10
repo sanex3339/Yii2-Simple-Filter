@@ -115,4 +115,4 @@ abstract class FilterData
 			}
 		}
 	}
-}	
+}

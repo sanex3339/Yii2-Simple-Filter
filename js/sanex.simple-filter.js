@@ -1,15 +1,14 @@
 (function() {
     var simpleFilter = function () {
+        var customUrlClass = '.sfCustomUrl';
         var dataWrapper = $('.fltr-data-wrapper');
         var filter = {};
         var linksDefaultGetParams = [];
-        var oldGetParams = [];
 
         var filterObject = {
             init: function () {
                 if (!this.historyApiCheck())
                     SimpleFilterAjax = false;
-                this.historyApiCheck();
                 this.events();
                 this.getCheckboxState();
                 if (!SimpleFilterAjax)
@@ -23,7 +22,6 @@
                 var self = this;
                 $(document).ready(function () {
                     $('.fltr-wrapper .fltr-check').click(function () {
-                        self.oldGetParams = window.location.search.substring(1);
                         if (SimpleFilterAjax)
                             self.setQueryUrl($(this));
                         self.setFilterData();
@@ -63,12 +61,12 @@
             },
             getDefaultLinksGetParams: function (elem) {
                 var self = this;
-                elem.find('a:not(".sfCustomUrl")').each(function (index) {
+                elem.find('a:not("' + customUrlClass + '")').each(function (index) {
                     linksDefaultGetParams[index] = self.getQueryParameters($(this).attr('href').split('/').pop().split('?').pop());
                 });
             },
             replaceUrlForLinks: function (elem) {
-                elem.find('a:not(".sfCustomUrl")').each(function (index) {
+                elem.find('a:not("' + customUrlClass + '")').each(function (index) {
                     $.query.parseNew(location.search, location.hash.split("?").length > 1 ? location.hash.split("?")[1] : "");
                     for (getParam in linksDefaultGetParams[index]) {
                         href = $.query.SET(getParam, linksDefaultGetParams[index][getParam]).toString();
@@ -81,7 +79,7 @@
             sendFilter: function (filterJsonFormat) {
                 var self = this;
                 $.ajax({
-                    url: SimpleFilterAjaxUrl + '?' + oldGetParams,
+                    url: SimpleFilterAjaxUrl,
                     type: 'POST',
                     data: {_csrf: yii.getCsrfToken(), filter: filterJsonFormat},
                     dataType: 'html',
@@ -136,15 +134,11 @@
                 if (!elem.hasClass('active')) {
                     url = $.query.SET('filter', '1').SET(category + '[]', elem.attr('value')).toString();
                     elem.addClass('active');
-                    if (this.historyApiCheck())
-                        window.history.pushState('', '', url);
                 } else {
                     url = $.query.REMOVE(category, elem.attr('value'));
                     elem.removeClass('active');
-                    if (this.historyApiCheck())
-                        window.history.pushState('', '', url);
-                    oldGetParams = window.location.search.substring(1);
                 }
+                window.history.pushState('', '', url);
             }
         };
         filterObject.init();
