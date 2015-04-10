@@ -5,7 +5,12 @@ use sanex\simplefilter\components\FilterData;
 
 class FilterDataPostRequest extends FilterData
 {
-	protected function setWhereArray()
+    /**
+     * set filter `where` statement from parameters in POST request
+     *
+     * @return $this
+     */
+	protected function setFilterWhere()
 	{
         $values = [];
         foreach ($this->filter as $name => $properties) { 
