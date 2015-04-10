@@ -9,8 +9,14 @@ use yii\web\Session;
 
 class SimpleFilter extends \yii\base\Module
 {
+    /*
+     *
+     * setParams() properties
+     *
+     */
+
     /**
-     * @var object model object
+     * @var object Model object
      */
     public $model;
 
@@ -20,30 +26,45 @@ class SimpleFilter extends \yii\base\Module
     public $query;
 
     /**
-     * @var bool use or not ajax for updating data
+     * @var bool Use or not ajax for updating data
      */
     public $useAjax = true;
 
     /**
-     * @var bool use or not cache
+     * @var bool Ue or not cache
      */
     public $useCache = false;
 
     /**
-     * @var bool return data as model or as dataProvider
+     * @var bool Return data as model or as dataProvider
      */
     public $useDataProvider = false;
 
-    //renderAjaxView() properties
+
+
+    /*
+     *
+     * renderAjaxView() properties
+     *
+     */
+
     /**
-     * @var string alias to ajax view file
+     * @var string Alias to ajax view file
      */
     public $ajaxViewFile;
 
     /**
-     * @var array custom parameters what was send to ajax view
+     * @var array Custom parameters what was send to ajax view
      */
     public $ajaxViewParams = [];
+
+
+
+    /*
+     *
+     * other properties
+     *
+     */
 
     /**
      * @var array setFilter() properties
@@ -51,22 +72,22 @@ class SimpleFilter extends \yii\base\Module
     public $filter;
 
     /**
-     * @var string current controller route
+     * @var string Current controller route
      */
     public $controllerRoute;
 
     /**
-     * @var object session object
+     * @var object Session object
      */
     public $session;
 
     /**
-     * @var array temporary session data
+     * @var array Temporary session data
      */
     private $tempSessionData;
 
     /**
-     * @var array available public methods parameters
+     * @var array Available public methods parameters
      */
     private $availableParameters = [
         'setFilter' => [
@@ -198,7 +219,7 @@ class SimpleFilter extends \yii\base\Module
     }
 
     /**
-     * put class properties into session
+     * call encrypt method for given class properties and put them into session
      *
      * @param array $properties
      * @return void

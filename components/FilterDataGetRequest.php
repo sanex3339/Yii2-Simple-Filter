@@ -6,7 +6,12 @@ use Yii;
 
 class FilterDataGetRequest extends FilterData
 {
-    protected function setWhereArray()
+    /**
+     * set filter `where` statement from parameters in GET request
+     *
+     * @return $this
+     */
+    protected function setFilterWhere()
     {
         if (Yii::$app->request->get('filter')) {
             $get = Yii::$app->request->get();
