@@ -1,9 +1,8 @@
 (function() {
     var simpleFilter = function () {
-        var customUrlClass = '.sfCustomUrl';
         var dataWrapper = $('.fltr-data-wrapper');
         var filter = {};
-        var linksDefaultGetParams = [];
+        var oldGetParams = [];
 
         var filterObject = {
             init: function () {
@@ -13,7 +12,6 @@
                 this.getCheckboxState();
                 if (!SimpleFilterAjax)
                     this.setFilterUrls();
-                this.getDefaultLinksGetParams(dataWrapper);
             },
             historyApiCheck: function () {
                 return !!(window.history && history.pushState);
@@ -22,6 +20,7 @@
                 var self = this;
                 $(document).ready(function () {
                     $('.fltr-wrapper .fltr-check').click(function () {
+                        oldGetParams = window.location.search.substring(1);
                         if (SimpleFilterAjax)
                             self.setQueryUrl($(this));
                         self.setFilterData();
@@ -59,34 +58,16 @@
                 })();
                 return urlParams;
             },
-            getDefaultLinksGetParams: function (elem) {
-                var self = this;
-                elem.find('a:not("' + customUrlClass + '")').each(function (index) {
-                    linksDefaultGetParams[index] = self.getQueryParameters($(this).attr('href').split('/').pop().split('?').pop());
-                });
-            },
-            replaceUrlForLinks: function (elem) {
-                elem.find('a:not("' + customUrlClass + '")').each(function (index) {
-                    $.query.parseNew(location.search, location.hash.split("?").length > 1 ? location.hash.split("?")[1] : "");
-                    for (getParam in linksDefaultGetParams[index]) {
-                        href = $.query.SET(getParam, linksDefaultGetParams[index][getParam]).toString();
-                    }
-                    if (href.charAt(0) == '&')
-                        href = href.replace('&', "?");
-                    $(this).attr('href', href);
-                });
-            },
             sendFilter: function (filterJsonFormat) {
                 var self = this;
                 $.ajax({
-                    url: SimpleFilterAjaxUrl,
+                    url: SimpleFilterAjaxUrl + '?' + oldGetParams,
                     type: 'POST',
                     data: {_csrf: yii.getCsrfToken(), filter: filterJsonFormat},
                     dataType: 'html',
                     success: function (data) {
                         dataWrapper.children().remove();
                         dataWrapper.html(data);
-                        self.replaceUrlForLinks(dataWrapper);
                     }
                 });
             },
@@ -139,6 +120,7 @@
                     elem.removeClass('active');
                 }
                 window.history.pushState('', '', url);
+                oldGetParams = window.location.search.substring(1);
             }
         };
         filterObject.init();

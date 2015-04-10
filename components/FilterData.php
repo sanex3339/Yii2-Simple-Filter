@@ -231,7 +231,10 @@ abstract class FilterData
 	 */
 	private function setData()
 	{
-		$dpProps = ['query' => $this->query, 'pagination' => ['pageSize' => $this->limit]];
+		$dpProps = [
+			'query' => $this->query,
+			'pagination' => ['pageSize' => $this->limit],
+		];
 
 		/* set dataProvider sorting based on ActiveQuery orderBy() method
 		   sorting based only on first orderBy() parameter */

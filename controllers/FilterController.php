@@ -102,8 +102,8 @@ class FilterController extends Controller
             ]);
             $data = $filterData->getData();
 
-            //set dynamic route for this action
-            $this->setRoute($parameters['controllerRoute'], 'post');
+            //set dynamic route for this action and dataProvider urls
+            $this->setRoute($parameters['controllerRoute'], 'post', $data, $parameters['useDataProvider']);
 
             $ajaxViewParams = $parameters['ajaxViewParams'];
             $ajaxViewParams['simpleFilterData'] = $data;
@@ -117,7 +117,7 @@ class FilterController extends Controller
     }
 
     /**
-     * Setting dynamic routes depending on controller in which was created Filter object
+     * * Setting dynamic routes depending on controller in which was created Filter object
      * On this controller route will redirect all `FilterController` get and post actions
      * As result, in all URLs inside Ajax view file $viewFile in href attribute, instead this url:
      * >> site.com/filter/filter/show-data-post/
@@ -126,9 +126,16 @@ class FilterController extends Controller
      *
      * @param $url
      * @param $type
+     * @param string $data
+     * @param bool $useDataProvider
      */
-    private function setRoute($url, $type)
+    private function setRoute($url, $type, $data = '', $useDataProvider = false)
     {
+        if ($useDataProvider) {
+            $data->pagination->route = $url;
+            $data->sort->route = $url;
+        }
+
         Yii::$app->getUrlManager()->addRules(
             [$url => $type == 'get' ? 'SimpleFilter/filter/show-data-get' : 'filter/filter/show-data-post']
         );

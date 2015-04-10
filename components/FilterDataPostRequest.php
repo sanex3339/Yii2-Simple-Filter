@@ -10,8 +10,8 @@ class FilterDataPostRequest extends FilterData
      *
      * @return $this
      */
-	protected function setFilterWhere()
-	{
+    protected function setFilterWhere()
+    {
         $values = [];
         foreach ($this->filter as $name => $properties) { 
             $category = explode('[', $name)[0];
