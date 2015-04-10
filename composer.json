@@ -3,7 +3,7 @@
     "description": "Simple Yii2 filter module with checkboxes",
     "keywords": ["yii", "yii2", "filter", "checkbox", "module"],
     "type": "yii2-extension",
-    "version": "0.9.0dev",
+    "version": "0.9.1dev",
     "license": "WTFPL",
     "authors": [
         {

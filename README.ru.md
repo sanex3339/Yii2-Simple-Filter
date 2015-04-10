@@ -1,7 +1,7 @@
 # Yii2-Simple-Filter
 Yii2 Simple Filter Module
 
-Yii2 Simple Filter Module v0.9.0dev
+Yii2 Simple Filter Module v0.9.1dev
 #####Не совместимо с более ранними версиями, т.к. изменились названия методов, а также способ установки параметров! 
 
 Видео: http://www.youtube.com/watch?v=Vah2j5WzXIs
@@ -48,9 +48,9 @@ $ajaxViewFile = '@sanex/catalog/views/catalog/catalog-ajax';
 
 $filter = SimpleFilter::getInstance();
 $filter->setParams([
-    'useAjax' => true,
     'model' => $model,
     'query' => $query,
+    'useAjax' => true,
     'useCache' => true,
     'useDataProvider' => true,
 ]);
@@ -62,9 +62,9 @@ $filter->setParams([
 
 `model` - модель, данные которой неотходимо отфильтровать;
 
-`useAjax` - (опционально, если не задано - `true`) можно выбирать между Ajax или не-Ajax фильтрацией, путем задания значения этого параметра в (bool) `true` или `false`;
-
 `query` - (опционально) - объект \yii\db\ActiveQuery, см. ниже;
+
+`useAjax` - (опционально, если не задано - `true`) можно выбирать между Ajax или не-Ajax фильтрацией, путем задания значения этого параметра в (bool) `true` или `false`;
 
 `useCache` - (опционально, если не задано - `false`) если (bool) true - возвращает кешированные данные, если (int) число - длительность кеширования в секундах;
 
