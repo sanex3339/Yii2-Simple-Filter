@@ -265,7 +265,6 @@ abstract class FilterData
 			$this->cacheDuration = (int) $this->useCache;
 		}
 
-		$data = $this->data;
 		Yii::$app->db->cache(function () use ($data) {
 			if ($this->useDataProvider) {
 				return $this->data->prepare(); //set cached dataProvider data

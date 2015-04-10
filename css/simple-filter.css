@@ -5,7 +5,7 @@
 
 .fltr-cat
 {
-	margin: 0px 0px 20px 0px;
+	margin: 0 0 20px 0;
 }
 
 .fltr-cat-caption
@@ -13,7 +13,7 @@
 	display: block;
 	font-weight: bold;
 	font-size: 15px;
-	margin: 0px 0px 5px 0px;
+	margin: 0 0 5px 0;
 }
 
 .fltr-checkbox
@@ -23,8 +23,8 @@
 
 .fltr-label
 {
-	margin: 0px 15px 0px 0px;
-	padding: 0px 0px 0px 6px;
+	margin: 0 15px 0 0;
+	padding: 0 0 0 6px;
 	font-size: 15px;
 	cursor: pointer;
 }
@@ -32,13 +32,13 @@
 .fltr-check, .fltr-check.horizontal
 {
 	background: url(../img/simple-filter-checkbox.png) no-repeat;
-	padding: 0px 0px 0px 18px;
+	padding: 0 0 0 18px;
 	display: inline-block;
 	float: left;
 	height: 12px;
 	font-size: 14px;
 	line-height: 14px;
-	margin: 0px 20px 0px 0px;
+	margin: 0 20px 0 0;
 	cursor: pointer;
 	color: #000;
 	text-decoration: none;
